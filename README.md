@@ -11,7 +11,7 @@
 
 ## 🎯 What is this?
 
-A **fully offline, browser-based mock exam simulator** for the **Microsoft AI-103 certification exam** — *Azure AI Apps and Agents Developer Associate*. Load your own JSON question bank, configure your exam settings, and practise in conditions that mirror the real exam.
+A **fully offline, browser-based mock exam simulator** for the **Microsoft AI-103 certification exam** — *Azure AI Apps and Agents Developer Associate*. Load your own JSON question bank, configure your exam settings, and practise the exam.
 
 No backend. No login. No data collection. Everything runs locally in your browser from a single HTML file.
 
@@ -43,14 +43,14 @@ No backend. No login. No data collection. Everything runs locally in your browse
 
 ### Option 1 — Download and open locally
 
-1. Download `simulator.html`
+1. Download `ai103_exam_simulator.html`
 2. Open it in any modern browser (Chrome, Edge, Firefox, Safari)
 3. Upload a question bank JSON file
 4. Configure your exam settings and start
 
 ### Option 2 — Use directly via GitHub Pages
 
-Visit: `https://<your-username>.github.io/ai103-mock-exam/`
+Visit: `https://Syed-Rahman-Mashwani.github.io/ai103-mock-exam](https://github.com/Syed-Rahman-Mashwani/ai103-mock-exam/`
 
 > No installation required.
 
@@ -60,9 +60,9 @@ Visit: `https://<your-username>.github.io/ai103-mock-exam/`
 
 ```
 ai103-mock-exam/
-├── simulator.html          # The complete exam simulator (single file)
+├── ai103_exam_simulator.html          # The complete exam simulator (single file)
 ├── questions/
-│   └── ai103_questions.json  # Official question bank (1000+ questions)
+│   └── ai103_questions.json  #  question bank (1000+ questions)
 ├── README.md
 ├── LICENSE
 └── CONTRIBUTING.md
