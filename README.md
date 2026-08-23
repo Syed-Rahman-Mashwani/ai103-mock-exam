@@ -50,7 +50,7 @@ No backend. No login. No data collection. Everything runs locally in your browse
 
 ### Option 2 — Use directly via GitHub Pages
 
-Visit: `https://Syed-Rahman-Mashwani.github.io/ai103-mock-exam](https://github.com/Syed-Rahman-Mashwani/ai103-mock-exam/`
+Visit:  [AI-103 Mock Exam Simulator](https://syed-rahman-mashwani.github.io/ai103-mock-exam/ai103_exam_simulator.html)
 
 > No installation required.
 
