@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AI-103 Mock Exam Simulator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#e8e8e8;min-height:100vh;padding:16px;}
+.wrap{max-width:800px;margin:0 auto;}
+
+/* ── Upload screen ── */
+#upload-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;gap:20px;}
+.logo{font-size:42px;margin-bottom:8px;}
+.upload-title{font-size:26px;font-weight:700;color:#a78bfa;}
+.upload-sub{font-size:14px;color:#666;max-width:480px;line-height:1.6;}
+.upload-box{border:2px dashed #333;border-radius:16px;padding:48px 40px;cursor:pointer;transition:all .2s;background:#111;width:100%;max-width:480px;}
+.upload-box:hover{border-color:#a78bfa;background:#1a1a2e;}
+.upload-box.drag-over{border-color:#a78bfa;background:#1e1a3a;}
+.upload-icon{font-size:48px;margin-bottom:12px;}
+.upload-label{font-size:15px;color:#888;margin-bottom:6px;}
+.upload-hint{font-size:12px;color:#555;}
+.upload-btn{display:inline-block;margin-top:14px;padding:10px 24px;border-radius:8px;background:#a78bfa;color:#0f0f0f;font-size:14px;font-weight:700;cursor:pointer;border:none;}
+.upload-btn:hover{background:#8b5cf6;}
+#file-input{display:none;}
+.schema-box{background:#111;border:1px solid #222;border-radius:12px;padding:16px 20px;max-width:480px;text-align:left;width:100%;}
+.schema-title{font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.schema-code{font-family:'Fira Mono','Courier New',monospace;font-size:11.5px;color:#9ca3af;line-height:1.7;white-space:pre;}
+.err-box{background:#2c0808;border:1px solid #ef4444;border-radius:8px;padding:12px 16px;color:#fca5a5;font-size:13px;max-width:480px;display:none;}
+.settings-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:480px;}
+.setting-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px 16px;flex:1;min-width:140px;}
+.setting-lbl{font-size:11px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;}
+.setting-sel{background:#111;border:1px solid #333;border-radius:6px;color:#e8e8e8;padding:6px 10px;font-size:13px;width:100%;}
+
+/* ── Stats bar ── */
+.stats-bar{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center;}
+.stat{display:flex;flex-direction:column;gap:2px;}
+.stat-val{font-size:16px;font-weight:700;}
+.stat-lbl{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:.4px;}
+.sv-c{color:#22c55e;}.sv-w{color:#ef4444;}.sv-r{color:#60a5fa;}.sv-p{color:#a78bfa;}.sv-s{color:#f59e0b;}
+
+/* ── Timer ── */
+.timer-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.tbg{flex:1;background:#1a1a1a;border-radius:99px;height:6px;border:1px solid #2a2a2a;overflow:hidden;}
+.tfill{height:6px;border-radius:99px;background:#22c55e;transition:width .5s,background .5s;}
+.tval{font-size:12px;font-weight:700;color:#888;min-width:90px;text-align:right;}
+.tval.warn{color:#ef4444;}.tval.over{color:#f59e0b;}
+
+/* ── Progress ── */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.pbg{flex:1;background:#1a1a1a;border-radius:99px;height:4px;border:1px solid #2a2a2a;}
+.pfill{height:4px;border-radius:99px;background:#a78bfa;transition:width .3s;}
+.plbl{font-size:11px;color:#555;min-width:55px;text-align:right;}
+
+/* ── Question card ── */
+.qcard{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:18px;margin-bottom:14px;}
+.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+.qnum{font-size:11px;font-weight:600;color:#666;background:#222;padding:3px 9px;border-radius:99px;border:1px solid #333;}
+.qtags{display:flex;gap:6px;flex-wrap:wrap;}
+.qtag{font-size:10px;padding:3px 9px;border-radius:99px;}
+.tag-s{color:#93c5fd;background:#1e3a5f;}.tag-f{color:#c4b5fd;background:#26215C;}.tag-r{color:#fdba74;background:#431407;}.tag-c{color:#86efac;background:#14532d;}.tag-default{color:#e8e8e8;background:#2a2a2a;}
+.type-tag-code{color:#86efac;background:#14532d;}.type-tag-dd{color:#fcd34d;background:#451a03;}.type-tag-s2{color:#fca5a5;background:#4c1414;}.type-tag-mcq{color:#93c5fd;background:#1e3a5f;}
+
+.scen-banner{background:#1a2a3a;border:1px solid #2d5a9e;border-radius:8px;padding:11px 13px;margin-bottom:11px;font-size:12.5px;color:#93c5fd;line-height:1.6;}
+.scen-banner strong{color:#bfdbfe;display:block;margin-bottom:3px;font-size:13px;}
+.qtype-note{font-size:11px;padding:3px 9px;border-radius:6px;margin-bottom:9px;display:inline-block;}
+.nf{background:#14532d;color:#86efac;}.ns{background:#4c1414;color:#fca5a5;}.nd{background:#451a03;color:#fcd34d;}
+.qtext{font-size:14px;color:#e8e8e8;line-height:1.65;margin-bottom:12px;}
+.code-block{background:#0d1117;border:1px solid #2a2a2a;border-radius:8px;padding:12px 14px;font-family:'Fira Mono','Courier New',monospace;font-size:12.5px;color:#d4d4d4;line-height:1.7;margin-bottom:12px;white-space:pre;overflow-x:auto;}
+.blank{background:#451a03;color:#fcd34d;padding:1px 5px;border-radius:4px;font-weight:700;}
+
+/* ── Options ── */
+.opts{display:flex;flex-direction:column;gap:7px;}
+.opt{background:#111;border:1px solid #2a2a2a;border-radius:8px;padding:10px 13px;font-size:13.5px;color:#d4d4d4;text-align:left;cursor:pointer;transition:all .13s;line-height:1.5;width:100%;}
+.opt:hover:not(:disabled){background:#1a1a1a;border-color:#a78bfa;}
+.opt.sel{border:1.5px solid #a78bfa;background:#1e1a3a;color:#c4b5fd;}
+.opt.cor{border:1.5px solid #22c55e;background:#052e16;color:#86efac;}
+.opt.wrg{border:1.5px solid #ef4444;background:#2c0808;color:#fca5a5;}
+.opt:disabled{cursor:default;}
+.opt.co{font-family:'Fira Mono','Courier New',monospace;font-size:12px;}
+.sub-btn{margin-top:9px;padding:7px 18px;border-radius:8px;border:1px solid #a78bfa;background:#a78bfa;color:#0f0f0f;font-size:12.5px;font-weight:700;cursor:pointer;}
+.sub-btn:hover{background:#8b5cf6;}.sub-btn:disabled{opacity:.4;cursor:default;}
+
+/* ── Explanation ── */
+.expl-box{margin-top:12px;background:#0d1117;border-left:3px solid #a78bfa;border-radius:0 8px 8px 0;padding:11px 13px;}
+.cor-label{font-size:13px;font-weight:700;color:#22c55e;margin-bottom:5px;}
+.expl-text{font-size:13px;color:#9ca3af;line-height:1.6;}
+
+/* ── Drag and Drop ── */
+.dd-wrap{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+.dd-col{flex:1;min-width:160px;}
+.dd-col-lbl{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.dd-item{background:#1e1a3a;border:1px solid #4c4080;border-radius:7px;padding:8px 11px;font-size:12.5px;color:#c4b5fd;cursor:pointer;margin-bottom:5px;transition:all .13s;user-select:none;}
+.dd-item:hover{border-color:#a78bfa;}.dd-item.dsel{border:1.5px solid #fcd34d;background:#451a03;color:#fcd34d;}
+.dd-item.dplaced{opacity:.3;cursor:default;}
+.dd-item.dcor{background:#052e16;border:1.5px solid #22c55e;color:#86efac;cursor:default;}
+.dd-item.dwrg{background:#2c0808;border:1.5px solid #ef4444;color:#fca5a5;cursor:default;}
+.dd-slot{background:#111;border:2px dashed #2a2a2a;border-radius:7px;padding:8px 11px;font-size:12.5px;color:#444;margin-bottom:5px;min-height:40px;cursor:pointer;transition:all .13s;}
+.dd-slot.dact{border-color:#a78bfa;color:#a78bfa;}.dd-slot.dfill{background:#1a1a2e;border:1.5px solid #4c4080;color:#c4b5fd;cursor:default;}
+.dd-slot.dcor{background:#052e16;border:1.5px solid #22c55e;color:#86efac;cursor:default;}
+.dd-slot.dwrg{background:#2c0808;border:1.5px solid #ef4444;color:#fca5a5;cursor:default;}
+.sn{font-size:10px;color:#444;margin-bottom:2px;}
+
+/* ── Nav ── */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap;}
+.nb{padding:8px 20px;border-radius:8px;border:1px solid #2a2a2a;background:#1a1a1a;color:#e8e8e8;font-size:13.5px;cursor:pointer;}
+.nb:hover{background:#222;}.nb.pri{background:#a78bfa;color:#0f0f0f;border-color:#a78bfa;font-weight:700;}
+.nb.pri:hover{background:#8b5cf6;}.nb:disabled{opacity:.35;cursor:default;}
+.nb.sec{background:#1a1a1a;border-color:#333;color:#888;font-size:12px;}
+
+/* ── Score screen ── */
+.sc-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:28px 20px;text-align:center;}
+.sc-big{font-size:54px;font-weight:800;color:#a78bfa;}
+.sc-1000{font-size:40px;font-weight:700;color:#f59e0b;margin:10px 0;}
+.sc-verdict{font-size:15px;font-weight:700;margin-bottom:18px;}
+.sc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0;}
+.sc-cell{background:#111;border-radius:8px;padding:14px 10px;}
+.sc-cv{font-size:22px;font-weight:700;}.sc-cl{font-size:11px;color:#555;margin-top:2px;}
+.action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+.action-btn{padding:10px 22px;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;}
+.action-btn.primary{background:#a78bfa;color:#0f0f0f;border:1px solid #a78bfa;}
+.action-btn.secondary{background:#1a1a1a;color:#e8e8e8;border:1px solid #333;}
+.action-btn:hover{opacity:.85;}
+
+/* ── Question nav grid ── */
+.qnav{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+.qnav-btn{width:36px;height:36px;border-radius:6px;border:1px solid #2a2a2a;background:#111;color:#666;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qnav-btn.answered.correct{background:#052e16;border-color:#22c55e;color:#86efac;}
+.qnav-btn.answered.wrong{background:#2c0808;border-color:#ef4444;color:#fca5a5;}
+.qnav-btn.current{border-color:#a78bfa;color:#a78bfa;}
+.qnav-btn:hover{border-color:#555;}
+
+h1{font-size:15px;font-weight:700;color:#a78bfa;margin-bottom:12px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ── UPLOAD SCREEN ── -->
+<div id="upload-screen">
+  <div>
+    <div class="logo">🧠</div>
+    <div class="upload-title">AI-103 Mock Exam Simulator</div>
+    <div class="upload-sub" style="margin-top:8px;">Upload a JSON question bank to start your exam. Questions must follow the AI-103 schema below.</div>
+  </div>
+
+  <div class="upload-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
+    <div class="upload-icon">📂</div>
+    <div class="upload-label">Click or drag and drop your JSON file here</div>
+    <div class="upload-hint">Accepts .json files matching the AI-103 question schema</div>
+    <input type="file" id="file-input" accept=".json"/>
+  </div>
+
+  <div class="err-box" id="err-box">❌ <span id="err-msg"></span></div>
+
+  <div class="settings-row">
+    <div class="setting-card">
+      <div class="setting-lbl">Exam duration</div>
+      <select class="setting-sel" id="set-duration">
+        <option value="7800">130 min (full exam)</option>
+        <option value="3600">60 min</option>
+        <option value="2400">40 min</option>
+        <option value="1200">20 min</option>
+        <option value="0">No timer</option>
+      </select>
+    </div>
+    <div class="setting-card">
+      <div class="setting-lbl">Question limit</div>
+      <select class="setting-sel" id="set-limit">
+        <option value="0">All questions</option>
+        <option value="10">10 questions</option>
+        <option value="20">20 questions</option>
+        <option value="30">30 questions</option>
+        <option value="50">50 questions</option>
+        <option value="100">100 questions</option>
+      </select>
+    </div>
+    <div class="setting-card">
+      <div class="setting-lbl">Question order</div>
+      <select class="setting-sel" id="set-order">
+        <option value="random">Randomized</option>
+        <option value="sequential">Sequential</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="schema-box">
+    <div class="schema-title">📋 Required JSON schema</div>
+    <div class="schema-code">[
+  {
+    "tag": "f",            // f=Foundry, s=Scenario, r=ResponsibleAI, c=Content
+    "type": "mcq",         // mcq | code | dragdrop
+    "multi": false,        // true = Select TWO
+    "scen": null,          // scenario text string or null
+    "scenlabel": null,     // optional scenario label
+    "text": "Question...", // question text
+    "options": ["A","B"],  // array of option strings
+    "answer": [0],         // array of correct option indices
+    "expl": "Correct answer: A — ...\n\nExplanation...",
+    // code questions only:
+    "code": "code string",
+    "codetype": "complete|bug",
+    // dragdrop questions only:
+    "items": ["Item 1","Item 2"],
+    "slots": ["Slot A","Slot B"],
+    "correctMapping": [1,0] // index of item that belongs in each slot
+  }
+]</div>
+  </div>
+</div>
+
+<!-- ── EXAM SCREEN ── -->
+<div id="exam-screen" style="display:none;">
+  <h1 id="exam-title">AI-103 Mock Exam Simulator</h1>
+
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-val sv-c" id="sc">0</span><span class="stat-lbl">✓ Correct</span></div>
+    <div class="stat"><span class="stat-val sv-w" id="sw">0</span><span class="stat-lbl">✗ Wrong</span></div>
+    <div class="stat"><span class="stat-val sv-r" id="sr">—</span><span class="stat-lbl">Remaining</span></div>
+    <div class="stat"><span class="stat-val sv-p" id="sp">—</span><span class="stat-lbl">% So Far</span></div>
+    <div class="stat"><span class="stat-val sv-s" id="ss">—</span><span class="stat-lbl">Score /1000</span></div>
+  </div>
+
+  <div class="timer-row" id="timer-row">
+    <span style="font-size:11px;color:#444;">Time</span>
+    <div class="tbg"><div class="tfill" id="tfill" style="width:100%"></div></div>
+    <span class="tval" id="tval">—</span>
+  </div>
+
+  <div class="prog-row">
+    <div class="pbg"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    <span class="plbl" id="plbl">Q 1 / —</span>
+  </div>
+
+  <div id="ec"></div>
+
+  <div class="qnav" id="qnav"></div>
+</div>
+
+<!-- ── SCORE SCREEN ── -->
+<div id="score-screen" style="display:none;"></div>
+
+</div><!-- /wrap -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+let qs=[],cur=0,ans=[],rev=[],ddSel=[],TOTAL_SECS=7800,tint=null,overtime=false,secsElapsed=0;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UPLOAD & SETUP
+// ═══════════════════════════════════════════════════════════════════════════
+const dropZone=document.getElementById('drop-zone');
+const fileInput=document.getElementById('file-input');
+
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)readFile(f);});
+fileInput.addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0]);});
+
+function showErr(msg){const b=document.getElementById('err-box');b.style.display='block';document.getElementById('err-msg').textContent=msg;}
+function hideErr(){document.getElementById('err-box').style.display='none';}
+
+function readFile(f){
+  if(!f.name.endsWith('.json')){showErr('File must be a .json file.');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const raw=JSON.parse(e.target.result);
+      if(!Array.isArray(raw)||raw.length===0)throw new Error('JSON must be a non-empty array.');
+      if(!raw[0].text||!raw[0].type)throw new Error('Questions must have "text" and "type" fields.');
+      hideErr();
+      initExam(raw);
+    }catch(err){showErr('Invalid JSON: '+err.message);}
+  };
+  reader.readAsText(f);
+}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function initExam(rawQs){
+  // Apply order setting
+  const order=document.getElementById('set-order').value;
+  let pool=order==='random'?shuffle(rawQs):[...rawQs];
+
+  // Apply limit
+  const limit=parseInt(document.getElementById('set-limit').value)||0;
+  if(limit>0)pool=pool.slice(0,limit);
+
+  // Randomize drag-and-drop items/slots
+  qs=pool.map(q=>{
+    if(q.type!=='dragdrop')return q;
+    // Shuffle items and rebuild correctMapping
+    const n=q.items.length;
+    const itemOrder=shuffle([...Array(n).keys()]); // new index → old index
+    const slotOrder=shuffle([...Array(q.slots.length).keys()]); // new slot index → old slot index
+
+    const newItems=itemOrder.map(i=>q.items[i]);
+    const newSlots=slotOrder.map(i=>q.slots[i]);
+
+    // correctMapping[slotIdx] = itemIdx that belongs there (in OLD indices)
+    // After shuffle: newSlot[si] = oldSlot[slotOrder[si]]
+    // Old correctMapping: oldCorrectMapping[oldSlotIdx] = oldItemIdx
+    // New correctMapping: for newSlot si, the correct newItem is the one whose oldIndex = oldCorrectMapping[slotOrder[si]]
+    const oldCM=q.correctMapping;
+    const newCM=slotOrder.map(oldSI=>{
+      const oldItemIdx=oldCM[oldSI];
+      return itemOrder.indexOf(oldItemIdx);
+    });
+
+    return {...q,items:newItems,slots:newSlots,correctMapping:newCM};
+  });
+
+  // Init state
+  ans=qs.map(q=>{
+    if(q.type==='dragdrop')return new Array(q.slots.length).fill(null);
+    if(q.multi)return[];
+    return null;
+  });
+  rev=new Array(qs.length).fill(false);
+  ddSel=new Array(qs.length).fill(null);
+  cur=0;
+  overtime=false;
+  secsElapsed=0;
+
+  // Timer
+  TOTAL_SECS=parseInt(document.getElementById('set-duration').value);
+
+  document.getElementById('upload-screen').style.display='none';
+  document.getElementById('exam-screen').style.display='block';
+  document.getElementById('exam-title').textContent='AI-103 Mock Exam — '+qs.length+' Questions';
+
+  if(TOTAL_SECS>0)startTimer();
+  else{document.getElementById('timer-row').style.display='none';}
+
+  updateStats();
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════════════════════════
+function startTimer(){
+  let secsLeft=TOTAL_SECS;
+  const fill=document.getElementById('tfill'),val=document.getElementById('tval');
+  tint=setInterval(()=>{
+    secsElapsed++;
+    if(!overtime){
+      secsLeft--;
+      if(secsLeft<=0){overtime=true;secsLeft=0;}
+    } else {
+      secsLeft--; // secsLeft goes negative = overtime seconds
+    }
+    if(!fill||!val)return;
+    const abs=overtime?Math.abs(secsLeft):secsLeft;
+    const m=Math.floor(abs/60),s=abs%60,ts=m+':'+(s<10?'0':'')+s;
+    val.textContent=overtime?'+'+ts:ts;
+    if(overtime){fill.style.width='0%';fill.style.background='#f59e0b';val.className='tval over';}
+    else{
+      fill.style.width=Math.round((secsLeft/TOTAL_SECS)*100)+'%';
+      if(secsLeft<=Math.min(600,TOTAL_SECS*0.15)){fill.style.background='#ef4444';val.className='tval warn';}
+      else if(secsLeft<=Math.min(1200,TOTAL_SECS*0.3)){fill.style.background='#f59e0b';}
+    }
+  },1000);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCORING — Progressive
+// ═══════════════════════════════════════════════════════════════════════════
+function isCorrect(i){
+  const q=qs[i];
+  if(q.type==='dragdrop')return ans[i].every((v,j)=>v===q.correctMapping[j]);
+  if(q.multi)return[...ans[i]].sort().join(',')===q.answer.slice().sort().join(',');
+  return ans[i]===q.answer[0];
+}
+function numC(){return qs.filter((_,i)=>rev[i]&&isCorrect(i)).length;}
+function numW(){return qs.filter((_,i)=>rev[i]&&!isCorrect(i)).length;}
+function numAns(){return qs.filter((_,i)=>rev[i]).length;}
+
+function updateStats(){
+  const c=numC(),a=numAns(),rem=qs.length-a;
+  const pct=a>0?Math.round((c/a)*100):null;
+  // Progressive score: based on answered so far only
+  const score=a>0?Math.round((c/a)*1000):null;
+  document.getElementById('sc').textContent=c;
+  document.getElementById('sw').textContent=numW();
+  document.getElementById('sr').textContent=rem;
+  document.getElementById('sp').textContent=pct!==null?pct+'%':'—';
+  document.getElementById('ss').textContent=score!==null?score:'—';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════════════════
+function ol(i){return String.fromCharCode(65+i);}
+
+function escCode(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/___+/g,'<span class="blank">______</span>');
+}
+
+function tagClass(t){
+  const m={s:'tag-s',f:'tag-f',r:'tag-r',c:'tag-c'};
+  return m[t]||'tag-default';
+}
+function tagLabel(t){
+  const m={s:'Scenario',f:'Foundry/Agents',r:'Responsible AI',c:'Content',scenario:'Scenario'};
+  return m[t]||(t?t.toUpperCase():'General');
+}
+function typeLabel(q){
+  if(q.type==='dragdrop')return'Drag & Match';
+  if(q.type==='code')return q.codetype==='bug'?'Code — Bug':'Code — Complete';
+  if(q.multi)return'Select TWO';
+  return'MCQ';
+}
+function typeTagClass(q){
+  if(q.type==='dragdrop')return'type-tag-dd';
+  if(q.type==='code')return'type-tag-code';
+  if(q.multi)return'type-tag-s2';
+  return'type-tag-mcq';
+}
+
+function render(){
+  const el=document.getElementById('ec');
+  if(cur>=qs.length){clearInterval(tint);renderScore();return;}
+  const q=qs[cur];
+  const pct=Math.round((cur/qs.length)*100);
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('plbl').textContent='Q '+(cur+1)+' / '+qs.length;
+
+  let typeNote='';
+  if(q.type==='code'&&q.codetype==='complete')typeNote='<div class="qtype-note nf">Complete the blank</div>';
+  else if(q.type==='code'&&q.codetype==='bug')typeNote='<div class="qtype-note nf">Identify the line causing the problem</div>';
+  else if(q.multi)typeNote='<div class="qtype-note ns">Select TWO answers</div>';
+  else if(q.type==='dragdrop')typeNote='<div class="qtype-note nd">Tap an item to select — tap a slot to place it</div>';
+
+  let scenHtml='';
+  if(q.scen){
+    const label=q.scenlabel||'Scenario';
+    scenHtml=`<div class="scen-banner"><strong>📋 ${label}</strong>${q.scen.replace(/\n/g,'<br>').replace(/•/g,'&#8226;')}</div>`;
+  }
+
+  let bodyHtml='';
+  if(q.type==='dragdrop'){bodyHtml=renderDD(cur,q);}
+  else{
+    const codeHtml=q.type==='code'?`<div class="code-block">${escCode(q.code)}</div>`:'';
+    bodyHtml=codeHtml+'<div class="opts" id="op"></div>';
+  }
+
+  let explHtml='';
+  if(rev[cur]){
+    let firstLine='',rest='';
+    if(q.expl){
+      const lines=q.expl.split('\n');
+      firstLine=lines[0];
+      rest=lines.slice(1).join('\n').trim();
+    }
+    explHtml=`<div class="expl-box"><div class="cor-label">✓ ${firstLine}</div><div class="expl-text">${rest.replace(/\n/g,'<br>')}</div></div>`;
+  }
+
+  el.innerHTML=`
+    <div class="qcard">
+      <div class="qhead">
+        <span class="qnum">Q${cur+1}</span>
+        <div class="qtags">
+          <span class="qtag ${tagClass(q.tag)}">${tagLabel(q.tag)}</span>
+          <span class="qtag ${typeTagClass(q)}">${typeLabel(q)}</span>
+        </div>
+      </div>
+      ${scenHtml}${typeNote}
+      <div class="qtext">${q.text}</div>
+      ${bodyHtml}
+      ${q.multi&&!rev[cur]?'<button class="sub-btn" id="sbtn" onclick="submitMulti()">Submit answers</button>':''}
+      ${q.type==='dragdrop'&&!rev[cur]?'<button class="sub-btn" id="ddbtn" onclick="submitDD()">Submit matching</button>':''}
+      ${explHtml}
+    </div>
+    <div class="nav">
+      <button class="nb" onclick="goB()" ${cur===0?'disabled':''}>← Back</button>
+      <div style="display:flex;gap:8px;">
+        <button class="nb sec" onclick="skipQ()">Skip</button>
+        <button class="nb pri" onclick="goN()">${cur===qs.length-1?'Finish →':'Next →'}</button>
+      </div>
+    </div>`;
+
+  if(q.type!=='dragdrop')renderOpts(cur,q);
+  if(q.multi&&!rev[cur]){const sb=document.getElementById('sbtn');if(sb)sb.disabled=ans[cur].length!==2;}
+  renderQNav();
+}
+
+function renderOpts(i,q){
+  const op=document.getElementById('op');if(!op)return;
+  (q.options||[]).forEach((o,j)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(q.type==='code'?' co':'');
+    b.textContent=ol(j)+'.  '+o;
+    if(rev[i]){
+      b.disabled=true;
+      if(q.answer.includes(j))b.classList.add('cor');
+      else if(q.multi?ans[i].includes(j):ans[i]===j)b.classList.add('wrg');
+    } else {
+      if(q.multi){if(ans[i].includes(j))b.classList.add('sel');}
+      else{if(ans[i]===j)b.classList.add('sel');}
+      b.onclick=()=>q.multi?toggleM(j):pickS(j);
+    }
+    op.appendChild(b);
+  });
+}
+
+function renderDD(i,q){
+  const placed=ans[i]||[],selIdx=ddSel[i];
+  const itemsHtml=(q.items||[]).map((item,j)=>{
+    const isPlaced=placed.includes(j);
+    let cls='dd-item';
+    if(isPlaced&&!rev[i])cls+=' dplaced';
+    if(selIdx===j)cls+=' dsel';
+    if(rev[i]){
+      const si=placed.indexOf(j);
+      if(si>=0)cls+=q.correctMapping[si]===j?' dcor':' dwrg';
+    }
+    return`<div class="${cls}" onclick="selItem(${i},${j})">${item}</div>`;
+  }).join('');
+
+  const slotsHtml=(q.slots||[]).map((slot,j)=>{
+    const pi=placed[j];const has=pi!==null&&pi!==undefined;
+    let cls='dd-slot';
+    if(rev[i]){if(has)cls+=q.correctMapping[j]===pi?' dcor':' dwrg';}
+    else{if(has)cls+=' dfill';else cls+=' dact';}
+    const content=has?(q.items[pi]||'?'):slot;
+    return`<div class="${cls}" onclick="placeItem(${i},${j})"><div class="sn">${j+1}.</div>${content}</div>`;
+  }).join('');
+
+  return`<div class="dd-wrap">
+    <div class="dd-col"><div class="dd-col-lbl">Items — tap to select</div>${itemsHtml}</div>
+    <div class="dd-col"><div class="dd-col-lbl">Slots — tap to place</div>${slotsHtml}</div>
+  </div>`;
+}
+
+function renderQNav(){
+  const el=document.getElementById('qnav');if(!el)return;
+  el.innerHTML='';
+  qs.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.className='qnav-btn'+(i===cur?' current':'')+(rev[i]?(isCorrect(i)?' answered correct':' answered wrong'):'');
+    b.textContent=i+1;
+    b.onclick=()=>{cur=i;render();};
+    el.appendChild(b);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ANSWER HANDLERS
+// ═══════════════════════════════════════════════════════════════════════════
+function pickS(j){if(rev[cur])return;ans[cur]=j;rev[cur]=true;updateStats();render();}
+function toggleM(j){
+  if(rev[cur])return;
+  const a=ans[cur],x=a.indexOf(j);
+  if(x>-1)a.splice(x,1);else if(a.length<2)a.push(j);
+  const sb=document.getElementById('sbtn');if(sb)sb.disabled=a.length!==2;
+  render();
+}
+function submitMulti(){if(!ans[cur]||ans[cur].length!==2)return;rev[cur]=true;updateStats();render();}
+function selItem(qi,j){
+  if(rev[qi])return;
+  const p=ans[qi],ex=p.indexOf(j);
+  if(ex>=0)p[ex]=null;
+  ddSel[qi]=ddSel[qi]===j?null:j;
+  render();
+}
+function placeItem(qi,si){
+  if(rev[qi])return;
+  const sel=ddSel[qi];if(sel===null||sel===undefined)return;
+  // Remove this item from any other slot first
+  const p=ans[qi];
+  for(let i=0;i<p.length;i++){if(p[i]===sel&&i!==si)p[i]=null;}
+  p[si]=sel;ddSel[qi]=null;render();
+}
+function submitDD(){if(rev[cur])return;rev[cur]=true;updateStats();render();}
+function skipQ(){if(cur<qs.length-1)cur++;else cur=qs.length;render();}
+function goN(){if(cur<qs.length-1){cur++;render();}else{cur=qs.length;render();}}
+function goB(){if(cur>0){cur--;render();}}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SCORE SCREEN
+// ═══════════════════════════════════════════════════════════════════════════
+function renderScore(){
+  clearInterval(tint);
+  document.getElementById('exam-screen').style.display='none';
+  const el=document.getElementById('score-screen');
+  el.style.display='block';
+
+  const ok=qs.filter((_,i)=>isCorrect(i)).length;
+  const tot=qs.length,attempted=numAns();
+  const pct=attempted>0?Math.round((ok/attempted)*100):0;
+  // Final score: based on attempted (progressive)
+  const score=attempted>0?Math.round((ok/attempted)*1000):0;
+  const wrong=attempted-ok;
+  const skipped=tot-attempted;
+  const v=pct>=80?'Strong pass territory ✓':pct>=65?'Borderline — review the misses':'More preparation needed';
+  const vc=pct>=80?'#22c55e':pct>=65?'#f59e0b':'#ef4444';
+
+  // Time display
+  const tv=document.getElementById('tval');
+  const timeStr=tv?tv.textContent:'—';
+
+  el.innerHTML=`
+    <div class="sc-card">
+      <div style="font-size:13px;color:#555;margin-bottom:6px;">AI-103 Mock Exam — ${tot} Questions</div>
+      <div class="sc-big">${ok} / ${attempted}</div>
+      <div style="font-size:12px;color:#555;margin-bottom:4px;">Correct out of attempted</div>
+      <div class="sc-1000">${score} / 1000</div>
+      <div style="font-size:12px;color:#555;margin-bottom:6px;">Progressive score (based on ${attempted} attempted)</div>
+      <div class="sc-verdict" style="color:${vc}">${v}</div>
+      <div style="font-size:12px;color:#444;margin-bottom:14px;">Time: ${timeStr} &nbsp;|&nbsp; Passing score: 700 / 1000</div>
+      <div class="sc-grid">
+        <div class="sc-cell"><div class="sc-cv" style="color:#22c55e">${ok}</div><div class="sc-cl">✓ Correct</div></div>
+        <div class="sc-cell"><div class="sc-cv" style="color:#ef4444">${wrong}</div><div class="sc-cl">✗ Wrong</div></div>
+        <div class="sc-cell"><div class="sc-cv" style="color:#a78bfa">${pct}%</div><div class="sc-cl">% Score</div></div>
+        <div class="sc-cell"><div class="sc-cv" style="color:#888">${skipped}</div><div class="sc-cl">Skipped</div></div>
+      </div>
+      <div class="action-row">
+        <button class="action-btn primary" onclick="restartExam()">📂 Load New JSON</button>
+        <button class="action-btn secondary" onclick="reviewExam()">📋 Review Answers</button>
+      </div>
+    </div>`;
+}
+
+function restartExam(){
+  document.getElementById('score-screen').style.display='none';
+  document.getElementById('upload-screen').style.display='flex';
+  document.getElementById('file-input').value='';
+  qs=[];cur=0;ans=[];rev=[];ddSel=[];
+  clearInterval(tint);
+}
+
+function reviewExam(){
+  // Show all questions with answers revealed
+  document.getElementById('score-screen').style.display='none';
+  document.getElementById('exam-screen').style.display='block';
+  // Mark all as reviewed
+  rev=rev.map(()=>true);
+  cur=0;
+  render();
+}
+</script>
+</body>
+</html>
