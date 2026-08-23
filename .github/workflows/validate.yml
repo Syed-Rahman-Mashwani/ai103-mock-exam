@@ -1,0 +1,11 @@
+name: Validate Questions
+
+on:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: python3 validate_questions.py questions/ai103_questions.json
