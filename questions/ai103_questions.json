@@ -1,5 +1,5 @@
 [
-   {
+  {
     "tag": "f",
     "type": "mcq",
     "multi": false,
@@ -11,7 +11,9 @@
       "AIProjectClient.connect(credential=cred, endpoint=endpoint)",
       "AIProjectClient.initialize(credential=cred, project_name=project)"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — AIProjectClient.from_connection_string().\n\nThe azure-ai-projects SDK uses the class method from_connection_string() to instantiate the client, passing a DefaultAzureCredential or other credential and the Foundry project connection string. create(), connect(), and initialize() are not valid class methods and will raise AttributeError."
   },
   {
@@ -26,7 +28,9 @@
       "Set temperature=0 to make the agent's tool selection deterministic",
       "Remove the function tool from the toolset and re-register it only when needed"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — Set tool_choice='auto'.\n\ntool_choice='auto' lets the model decide on each turn whether to call a tool and which tool to call based on the query context. If the query can be answered from the vector index, the agent will use retrieval; if it requires live data, it uses the function tool. tool_choice='required' forces a tool call every turn — worsening the problem. Temperature affects generation randomness, not tool selection logic. Dynamically removing and re-registering tools is an anti-pattern that requires recreating the agent."
   },
   {
@@ -39,11 +43,13 @@
     "code": "thread = client.agents.create_thread()\n\nclient.agents._____(  \n    thread_id=thread.id,\n    role=\"user\",\n    content=\"Summarise the Q3 financial report\"\n)\n\nrun = client.agents.create_and_process_run(\n    thread_id=thread.id,\n    agent_id=agent_id\n)",
     "options": [
       "add_message()",
-      "send_message()",
       "create_message()",
+      "send_message()",
       "post_message()"
     ],
-    "answer": [2],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: C — create_message().\n\nThe azure-ai-projects SDK uses client.agents.create_message() to add a message to a thread. It accepts thread_id, role (\"user\" or \"assistant\"), and content. add_message(), send_message(), and post_message() are not valid method names and will raise AttributeError."
   },
   {
@@ -56,11 +62,13 @@
     "code": "run = client.agents.create_and_process_run(\n    thread_id=thread.id,\n    agent_id=agent_id\n)\n\nmessages = client.agents.list_messages(thread_id=thread.id)\n\nfor msg in messages.items:\n    if msg.role == \"assistant\":\n        print(msg.content[0].text.value)",
     "options": [
       "run = client.agents.create_and_process_run(...)",
-      "messages = client.agents.list_messages(thread_id=thread.id)",
       "for msg in messages.items:",
+      "messages = client.agents.list_messages(thread_id=thread.id)",
       "print(msg.content[0].text.value)"
     ],
-    "answer": [2],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: C — for msg in messages.items:\n\nThe list_messages() call returns a MessageList object where messages are stored in the .data attribute — not .items. Iterating over .items raises AttributeError because that attribute does not exist on MessageList. The correct pattern is: for msg in messages.data. The run creation, list_messages call, and content access are all correct."
   },
   {
@@ -72,10 +80,13 @@
     "options": [
       "Upload each CSV using client.agents.upload_file_and_poll() to obtain a file_id for each file",
       "Store the CSV files in Azure Blob Storage and include the SAS URLs in each user message",
-      "Attach the file_ids to the agent at creation time in the tool_resources for the code_interpreter tool",
-      "Register the CSV files as Foundry data assets — the code interpreter accesses all registered data assets automatically"
+      "Register the CSV files as Foundry data assets — the code interpreter accesses all registered data assets automatically",
+      "Attach the file_ids to the agent at creation time in the tool_resources for the code_interpreter tool"
     ],
-    "answer": [0, 2],
+    "answer": [
+      0,
+      3
+    ],
     "expl": "Correct answers: A and C.\n\nPre-loading files for the code interpreter requires: (1) uploading each file using upload_file_and_poll() which returns a persistent file_id, and (2) attaching those file_ids to the agent at creation in tool_resources: {\"code_interpreter\": {\"file_ids\": [file_id_1, file_id_2]}}. SAS URLs in messages (B) require re-downloading each turn. Data assets (D) are not automatically accessible to the code interpreter without explicit file attachment."
   },
   {
@@ -96,7 +107,12 @@
       "Static context defined at agent creation — same for all users and sessions",
       "Retrieves relevant past context from a vector store on each turn"
     ],
-    "correctMapping": [0, 1, 2, 3],
+    "correctMapping": [
+      0,
+      1,
+      2,
+      3
+    ],
     "expl": "Correct matches: Thread memory → single session | Cross-session → across sessions | System prompt → static/all users | RAG memory → vector retrieval per turn.\n\nThese four memory types represent distinct scopes in AI-103 agent design. Thread memory is the default per-conversation history. Cross-session memory requires a persistent store (e.g. Cosmos DB) keyed to a user identifier. System prompt memory is static and identical for every user. Retrieval-augmented memory dynamically fetches relevant context from a vector index on each turn."
   },
   {
@@ -106,12 +122,14 @@
     "scen": null,
     "text": "An AI agent used for automated loan approval decisions in the EU must comply with the EU AI Act. A lawyer asks: at what stage must a conformity assessment be completed? Which answer is correct?",
     "options": [
-      "After go-live — the system can launch and the conformity assessment is completed within 12 months of deployment",
       "Before placing the high-risk AI system on the market or putting it into service",
+      "After go-live — the system can launch and the conformity assessment is completed within 12 months of deployment",
       "Conformity assessment is only required if the system causes harm — it is triggered reactively",
       "Conformity assessment applies only to AI systems that use biometric data — loan approval systems are exempt"
     ],
-    "answer": [1],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: B — Before placing the system on the market or putting it into service.\n\nThe EU AI Act requires that high-risk AI systems (which include automated loan/credit decisions) must complete a conformity assessment before deployment — not after go-live. Conformity assessment is proactive, not reactive. The biometric exemption claim is false — loan and credit scoring systems are explicitly listed as high-risk in Annex III of the EU AI Act."
   },
   {
@@ -121,12 +139,14 @@
     "scen": null,
     "text": "A developer is building a multi-agent solution where a coordinator agent must invoke a specialist summarisation agent. The specialist agent is already deployed in Azure AI Foundry. Which pattern correctly implements agent-to-agent invocation?",
     "options": [
-      "Register the specialist agent's run API as a function tool on the coordinator — when the coordinator emits a tool_call, the application executes a run on the specialist agent and returns its response",
+      "Deploy both agents behind Azure API Management and use APIM policies to route between them based on query content",
       "Configure both agents to share the same conversation thread — the specialist agent reads coordinator messages and responds automatically",
       "Use Azure Service Bus to publish coordinator outputs as messages — the specialist agent subscribes and processes them",
-      "Deploy both agents behind Azure API Management and use APIM policies to route between them based on query content"
+      "Register the specialist agent's run API as a function tool on the coordinator — when the coordinator emits a tool_call, the application executes a run on the specialist agent and returns its response"
     ],
-    "answer": [0],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: A — Register specialist agent as a function tool on the coordinator.\n\nThe correct AI-103 multi-agent pattern is to wrap the specialist agent's invocation (create_thread, create_message, create_and_process_run, retrieve response) as a Python function and register it as a function tool on the coordinator. When the coordinator decides to delegate, it emits a tool_call, the application executes the specialist agent run, and returns the response to the coordinator thread. Shared threads cause agents to interfere with each other's reasoning. Service Bus and APIM add infrastructure complexity without Foundry-native integration."
   },
   {
@@ -138,12 +158,14 @@
     "text": "A developer is implementing streaming for an Azure AI Foundry agent run so the user sees tokens progressively. Complete the blank to use the correct streaming method.",
     "code": "with client.agents._____(  \n    thread_id=thread.id,\n    agent_id=agent_id\n) as stream:\n    for event in stream:\n        if hasattr(event, 'delta') and hasattr(event.delta, 'content'):\n            for block in event.delta.content:\n                if hasattr(block, 'text'):\n                    print(block.text.value, end='', flush=True)",
     "options": [
-      "create_run_stream()",
+      "run_stream()",
       "stream_run()",
       "create_streaming_run()",
-      "run_stream()"
+      "create_run_stream()"
     ],
-    "answer": [0],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: A — create_run_stream().\n\nThe azure-ai-projects SDK provides create_run_stream() as a context manager that yields streaming events during agent execution. It is the correct method for progressive token rendering. stream_run(), create_streaming_run(), and run_stream() are not valid SDK method names."
   },
   {
@@ -153,12 +175,14 @@
     "scen": null,
     "text": "A developer is using Azure AI Foundry Content Understanding to process customer call recordings. The output schema requires: speaker_label, timestamp_start, timestamp_end, and transcript per segment. Which Content Understanding configuration produces this structured output?",
     "options": [
-      "Configure an audio analyzer with a custom output schema defining the four required fields — Content Understanding returns structured JSON matching the schema",
       "Use Azure AI Speech batch transcription and post-process the VTT output with a custom parser to extract speaker labels and timestamps",
+      "Configure an audio analyzer with a custom output schema defining the four required fields — Content Understanding returns structured JSON matching the schema",
       "Use the Document Intelligence read model — it supports audio inputs when configured with the speech modality flag",
       "Configure a Prompt Flow with an Azure AI Speech step followed by a GPT-4o step that structures the transcript into the required JSON schema"
     ],
-    "answer": [0],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: A — Content Understanding audio analyzer with custom output schema.\n\nContent Understanding in Azure AI Foundry supports audio as an input modality and allows you to define a custom output schema (JSON) specifying the exact fields you want extracted — including speaker_label, timestamps, and transcript per segment. It returns typed, structured JSON directly. Speech batch transcription (B) returns raw VTT/JSON that requires custom parsing. Document Intelligence (C) does not support audio inputs. Prompt Flow (D) achieves the result but requires two services and custom orchestration when Content Understanding handles it natively."
   },
   {
@@ -169,11 +193,13 @@
     "text": "An Azure AI Foundry vector index backed by Azure AI Search is returning stale results after source documents in Blob Storage were updated 2 hours ago. The indexer is on a PT30M schedule. What is the most likely cause and correct resolution?",
     "options": [
       "The vector index does not support incremental updates — the entire index must be rebuilt from scratch after any document change",
-      "The indexer has not yet run since the document was updated — wait for the next scheduled run or trigger the indexer manually via the Run API",
+      "Blob Storage change detection requires an Azure Event Grid subscription — without it, the indexer cannot detect updated files",
       "The embedding model has cached the old document vectors — clear the embedding cache in the Foundry project settings",
-      "Blob Storage change detection requires an Azure Event Grid subscription — without it, the indexer cannot detect updated files"
+      "The indexer has not yet run since the document was updated — wait for the next scheduled run or trigger the indexer manually via the Run API"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — Wait for the next scheduled run or trigger manually.\n\nAzure AI Search indexers poll for changes on their configured schedule. With PT30M scheduling, updates can take up to 30 minutes to appear. If immediate consistency is needed, the indexer can be triggered via the Run API or the Azure portal. Vector indexes support incremental updates — full rebuilds are not required. There is no embedding cache to clear. Event Grid is optional for faster triggering but not required for basic change detection with Blob Storage indexers."
   },
   {
@@ -183,12 +209,15 @@
     "scen": null,
     "text": "A Foundry agent must never respond with content that could be considered harmful, and all agent responses must be evaluated for safety before reaching users in production. Which TWO mechanisms implement this defence-in-depth approach? (Select TWO)",
     "options": [
+      "Use Azure API Management rate limiting to throttle requests — reducing request volume reduces the probability of harmful outputs",
       "Configure Azure OpenAI content filters on the model deployment — harmful content categories are blocked at the infrastructure level before the response leaves the model",
-      "Set the agent's system prompt to 'Never generate harmful content' — this is sufficient as the primary safety control",
       "Run Azure AI Evaluation SDK safety evaluators (SelfHarmEvaluator, HateUnfairnessEvaluator) on a representative dataset before production release to measure risk",
-      "Use Azure API Management rate limiting to throttle requests — reducing request volume reduces the probability of harmful outputs"
+      "Set the agent's system prompt to 'Never generate harmful content' — this is sufficient as the primary safety control"
     ],
-    "answer": [0, 2],
+    "answer": [
+      1,
+      2
+    ],
     "expl": "Correct answers: A and C.\n\nDefence-in-depth for safety requires: (1) content filters on the Azure OpenAI deployment (A) — these operate at infrastructure level and block harmful categories on every response automatically, and (2) pre-production safety evaluation using the Evaluation SDK (C) — this measures the probability and severity of harmful outputs before going live. A system prompt instruction (B) alone is not a reliable safety control — it can be bypassed. Rate limiting (D) is a performance/cost control, not a safety mechanism."
   },
   {
@@ -199,12 +228,14 @@
     "scenlabel": "Scenario — Logistics AI Solution",
     "text": "The solution must extract structured fields (tracking number, origin, destination, estimated delivery date, item count) from 6 different PDF manifest templates. No prebuilt Document Intelligence model covers this format. The team has 40 labeled samples per template. Which approach is most appropriate?",
     "options": [
-      "Use the prebuilt Document Intelligence invoice model — it supports custom field names via configuration without training",
       "Train a custom Document Intelligence extraction model per template using the 40 labeled samples, then compose all 6 into a composed model",
+      "Use the prebuilt Document Intelligence invoice model — it supports custom field names via configuration without training",
       "Use Azure AI Foundry Content Understanding with a document schema — no labeled training samples are required",
       "Use a GPT-4o multimodal deployment — submit each manifest page as an image and extract fields via a structured JSON prompt"
     ],
-    "answer": [1],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: B — Custom Document Intelligence models composed.\n\nWith 6 distinct templates, no prebuilt coverage, and 40 labeled samples per template (exceeding the minimum 5), custom extraction models trained per template and composed under a single endpoint is the correct approach. The prebuilt invoice model (A) is for invoice-specific fields — it cannot be configured for arbitrary field names without training. Content Understanding (C) is powerful for unstructured content but less precise for fixed-field extraction across known templates. GPT-4o (D) is non-deterministic and expensive at logistics scale."
   },
   {
@@ -215,11 +246,13 @@
     "text": "The AI agent must retrieve real-time package tracking status from the internal API and answer customer queries. The API requires an OAuth 2.0 client credentials token. Where should the token acquisition logic be implemented?",
     "options": [
       "In the agent's system prompt — include the bearer token so the model passes it in tool call arguments",
-      "In the function tool implementation — the Python function acquires the token using client credentials flow and attaches it to the API request",
       "In the Azure AI Foundry agent configuration — add the OAuth token as a connection credential in the project settings",
+      "In the function tool implementation — the Python function acquires the token using client credentials flow and attaches it to the API request",
       "In the user message — the client application acquires the token and passes it with each user query"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — In the function tool implementation.\n\nAuthentication to external APIs is always handled inside the function tool's Python implementation — not by the model, the agent config, or the client application. The function acquires a token using client credentials flow (e.g. via MSAL or DefaultAzureCredential with the right scope), attaches it as a Bearer token to the API request, and returns structured results to the agent. Putting the token in the system prompt (A) exposes it in traces and responses. Foundry agent connections (C) are for Azure service connections, not arbitrary OAuth flows. Passing the token in user messages (D) exposes credentials in conversation history."
   },
   {
@@ -240,7 +273,12 @@
       "Azure AI Speech — batch transcription",
       "Azure AI Foundry — Agents Service with retrieval tool"
     ],
-    "correctMapping": [0, 1, 2, 3],
+    "correctMapping": [
+      0,
+      1,
+      2,
+      3
+    ],
     "expl": "Correct matches: PDF manifests → Document Intelligence custom composed | Email analysis → AI Language sentiment + NER | Voicemail → Speech batch transcription | Customer queries → Foundry Agents with retrieval.\n\nEach maps to the purpose-built AI-103 service for that modality: Document Intelligence for structured PDF extraction, AI Language for text sentiment and entity recognition, Speech batch transcription for asynchronous long audio files, and Foundry Agents with a retrieval tool for grounded Q&A over indexed shipment data."
   },
   {
@@ -251,11 +289,14 @@
     "text": "The solution must ensure all data remains within the company's Azure subscription — no data must traverse the public internet. Which TWO configurations are required? (Select TWO)",
     "options": [
       "Configure Azure Private Endpoints for all Azure AI services and the Foundry project, disabling public network access",
-      "Use Azure API Management to proxy all AI service calls — APIM keeps traffic private by default",
       "Deploy all application components in an Azure Virtual Network and route AI service traffic through the VNet via service endpoints or private endpoints",
-      "Enable encryption at rest on all Azure AI service resources — this prevents data from leaving the subscription"
+      "Enable encryption at rest on all Azure AI service resources — this prevents data from leaving the subscription",
+      "Use Azure API Management to proxy all AI service calls — APIM keeps traffic private by default"
     ],
-    "answer": [0, 2],
+    "answer": [
+      0,
+      1
+    ],
     "expl": "Correct answers: A and C.\n\nPrivate Endpoints (A) create private IP addresses for Azure AI services inside the company's network, disabling public access. VNet integration (C) routes application traffic to AI services through private network paths. Together they ensure end-to-end private connectivity. API Management (B) proxies HTTP traffic but does not inherently keep it private — it would also need private endpoint configuration. Encryption at rest (D) protects stored data — it does not control network routing or prevent data from traversing the public internet."
   },
   {
@@ -266,11 +307,13 @@
     "text": "A developer is configuring Azure AI Foundry Prompt Flow for a RAG pipeline. The flow has three nodes: embed_query, vector_search, and llm_response. During testing, the llm_response node receives an empty context and generates a hallucinated answer. The embed_query and vector_search nodes complete successfully. What is the most likely cause?",
     "options": [
       "The embedding model is returning zero-length vectors — the vector search returns no results",
-      "The output of the vector_search node is not correctly wired as the input to the llm_response node in the flow's DAG configuration",
+      "The system prompt in llm_response does not instruct the model to use the context — it answers from training data by default",
       "The LLM deployment referenced in llm_response is not deployed in the same Foundry project as the flow",
-      "The system prompt in llm_response does not instruct the model to use the context — it answers from training data by default"
+      "The output of the vector_search node is not correctly wired as the input to the llm_response node in the flow's DAG configuration"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — vector_search output not wired to llm_response input.\n\nIn Prompt Flow's DAG (directed acyclic graph), node outputs must be explicitly connected to downstream node inputs. If vector_search completes successfully but llm_response receives empty context, the most likely cause is that the connection between nodes is missing or misconfigured — the context variable is not mapped from vector_search output to llm_response input. Zero-length vectors would cause vector_search to fail, not succeed. A different project deployment would cause an authentication error. System prompt grounding is a separate concern — the node still receives whatever is wired to its context input."
   },
   {
@@ -281,11 +324,13 @@
     "text": "An organisation is deploying a Foundry agent for HR query handling. The agent sometimes provides incorrect information about parental leave policies for employees in specific countries. The HR team wants to measure and mitigate this. Which evaluation metric most directly measures this risk?",
     "options": [
       "Coherence score — measures whether the agent's response logically follows from the question",
-      "Groundedness score — measures whether the agent's response is supported by the retrieved policy documents",
       "Fluency score — measures the grammatical quality and naturalness of the agent's response",
+      "Groundedness score — measures whether the agent's response is supported by the retrieved policy documents",
       "Relevance score — measures whether the agent's response addresses the employee's question"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — Groundedness score.\n\nGroundedness directly measures whether the agent's claims are supported by the retrieved context (policy documents). Low groundedness = the agent is making claims not present in the retrieved policies = incorrect information risk. Coherence measures logical flow — not factual accuracy. Fluency measures grammar — not content correctness. Relevance measures whether the answer addresses the question — a response can be relevant but still factually wrong if it hallucates."
   },
   {
@@ -298,11 +343,13 @@
     "code": "import json\nimport requests\nfrom azure.ai.projects.models import FunctionTool, ToolSet\n\ndef get_shipment_status(tracking_number: str) -> str:\n    response = requests.get(\n        f\"https://api.logistics.internal/track/{tracking_number}\",\n        headers={\"Authorization\": f\"Bearer {acquire_token()}\"}\n    )\n    return json.dumps(response.json())\n\nfunctions = FunctionTool(functions=_____)\ntoolset = ToolSet()\ntoolset.add(functions)\n\nagent = client.agents.create_agent(\n    model=\"gpt-4o\",\n    name=\"logistics-agent\",\n    instructions=\"You are a logistics assistant.\",\n    toolset=toolset\n)",
     "options": [
       "[get_shipment_status]",
-      "{get_shipment_status}",
       "(get_shipment_status,)",
+      "{get_shipment_status}",
       "get_shipment_status"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — {get_shipment_status}.\n\nFunctionTool expects a Python set of function references — not a list, tuple, or single function. Using {get_shipment_status} (a set containing the function) is the correct syntax. A list [get_shipment_status] and a tuple (get_shipment_status,) are not valid — the SDK specifically expects a set. Passing the function directly without a container raises a TypeError."
   },
   {
@@ -313,11 +360,13 @@
     "text": "A production Foundry agent has been running for 3 months. The team wants to identify which tool calls are taking the longest and causing high latency for users. Which Azure AI Foundry feature provides per-step timing data for each agent run?",
     "options": [
       "Azure Monitor Metrics — configure latency metrics on the Azure OpenAI resource to measure token generation time",
-      "Azure AI Foundry Tracing — each agent run trace includes per-step timing, tool call durations, and end-to-end latency",
+      "Azure AI Evaluation SDK — run a latency evaluator on a sample of past conversations",
       "Azure Application Insights — instrument the application to log timestamps before and after each agent turn",
-      "Azure AI Evaluation SDK — run a latency evaluator on a sample of past conversations"
+      "Azure AI Foundry Tracing — each agent run trace includes per-step timing, tool call durations, and end-to-end latency"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — Azure AI Foundry Tracing.\n\nFoundry Tracing captures full OpenTelemetry traces for every agent run — each span includes start time, end time, and duration for every step: LLM calls, tool invocations, retrieval operations, and the overall run. This makes it the correct tool for diagnosing per-step latency. Azure Monitor Metrics (A) measures aggregate resource-level metrics — not per-step agent execution timing. Application Insights (C) requires manual timestamp instrumentation. The Evaluation SDK (D) measures quality metrics — it does not evaluate latency."
   },
   {
@@ -333,8 +382,20 @@
       "Create the Foundry agent and attach the retrieval tool pointing to the vector index",
       "Test the agent in Foundry Playground and run groundedness evaluation"
     ],
-    "slots": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5"],
-    "correctMapping": [0, 2, 1, 3, 4],
+    "slots": [
+      "Step 1",
+      "Step 2",
+      "Step 3",
+      "Step 4",
+      "Step 5"
+    ],
+    "correctMapping": [
+      0,
+      2,
+      1,
+      3,
+      4
+    ],
     "expl": "Correct order: (1) Chunk and embed source documents → (2) Create AI Search index and populate with embeddings → (3) Define agent system prompt → (4) Create agent with retrieval tool → (5) Test and evaluate.\n\nThe data pipeline must exist before the agent can query it. Chunking and embedding comes first, then index creation and population, then agent design (system prompt), then wiring the retrieval tool, and finally testing and evaluation before production."
   },
   {
@@ -345,11 +406,13 @@
     "text": "A developer deploys a GPT-4o model in Azure AI Foundry and calls it using the azure-ai-inference SDK. The call returns a 404 error. The endpoint URL and API version are confirmed correct. What is the most likely cause?",
     "options": [
       "The azure-ai-inference SDK requires a different API version than the one used for the Azure OpenAI SDK",
-      "The model parameter passed to the client.complete() call does not match the deployment name in the Foundry project",
       "GPT-4o is not supported by the azure-ai-inference SDK — it requires the AzureOpenAI client from the openai package",
+      "The model parameter passed to the client.complete() call does not match the deployment name in the Foundry project",
       "The DefaultAzureCredential does not work with the azure-ai-inference SDK — an API key must be used"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — Model parameter does not match the deployment name.\n\nIn Azure AI Foundry, models are accessed by their deployment name — not the base model name. Passing model='gpt-4o' when the deployment is named 'my-gpt4o-prod' results in a 404 because no deployment with that exact name exists. The fix is to use the exact deployment name. The azure-ai-inference SDK supports GPT-4o and works with DefaultAzureCredential — both A and D are incorrect. API version differences do not typically cause 404 errors."
   },
   {
@@ -363,10 +426,12 @@
     "options": [
       "tool_calls = run.required_action.submit_tool_outputs.tool_calls",
       "output = execute_tool(tc.function.name, tc.function.arguments)",
-      "client.agents.submit_tool_outputs_to_run(..., tool_outputs=results[0])",
-      "results.append({\"tool_call_id\": tc.id, \"output\": output})"
+      "results.append({\"tool_call_id\": tc.id, \"output\": output})",
+      "client.agents.submit_tool_outputs_to_run(..., tool_outputs=results[0])"
     ],
-    "answer": [2],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: C — tool_outputs=results[0].\n\nresults[0] submits only the first tool result to the run. The tool_outputs parameter must receive the complete list of all tool results — tool_outputs=results. The agent requires all pending tool outputs to be submitted in a single call before it can continue reasoning. Submitting only the first one leaves the second tool call unresolved and the agent cannot proceed past the tool call step."
   },
   {
@@ -377,11 +442,13 @@
     "text": "Microsoft's Responsible AI principle of Transparency requires which of the following in an AI-103 solution?",
     "options": [
       "The AI system must make decisions that are statistically fair across all demographic groups it affects",
-      "The AI system must be reliable under a wide range of conditions including adversarial inputs",
       "People must be informed when they are interacting with an AI system and must be able to understand how it makes decisions",
+      "The AI system must be reliable under a wide range of conditions including adversarial inputs",
       "The AI system must protect users' personal data and respect their privacy throughout its operation"
     ],
-    "answer": [2],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: C — People must be informed they are interacting with AI and understand how decisions are made.\n\nTransparency in Microsoft's Responsible AI framework means: disclosing that a system is AI-powered, making the system's purpose and capabilities understandable, and enabling meaningful explanation of decisions. Fairness (A) is a separate principle. Reliability and Safety (B) is a separate principle. Privacy and Security (D) is a separate principle. Each of the six principles is distinct and commonly tested as a matching exercise on AI-103."
   },
   {
@@ -392,11 +459,13 @@
     "text": "An organisation has an existing Azure AI Search index used for keyword search. They want to add vector similarity search without re-indexing all documents from scratch. Which is the most efficient approach?",
     "options": [
       "Delete the existing index and rebuild it with a vector field — incremental addition of vector fields to existing indexes is not supported",
-      "Add a vector field to the existing index schema, run a custom skill to generate embeddings for existing documents, and run the indexer to populate the new field",
+      "Enable semantic ranker on the existing index — semantic ranker provides vector-like similarity search without adding a vector field",
       "Create a second separate vector index and merge results from both indexes in the application layer using a custom RRF implementation",
-      "Enable semantic ranker on the existing index — semantic ranker provides vector-like similarity search without adding a vector field"
+      "Add a vector field to the existing index schema, run a custom skill to generate embeddings for existing documents, and run the indexer to populate the new field"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — Add a vector field and run an embedding skill.\n\nAzure AI Search supports adding new fields to an existing index schema without deleting it. Adding a vector field (Collection(Edm.Single) with dimensions and vectorSearchProfile), then running an indexer with an embedding skill (e.g. AzureOpenAIEmbeddingSkill) populates the new field for existing documents. Full rebuild (A) is unnecessary. A separate index (C) adds complexity without leveraging the existing index's keyword search for hybrid. Semantic ranker (D) re-ranks keyword results using language models — it does not perform vector similarity search and does not require a vector field."
   },
   {
@@ -406,12 +475,15 @@
     "scen": null,
     "text": "A developer wants to evaluate an AI-103 RAG agent across three quality dimensions simultaneously: whether responses are grounded in context, whether they are relevant to the question, and whether they are coherent. Which TWO statements about running this evaluation are correct? (Select TWO)",
     "options": [
-      "All three evaluators (GroundednessEvaluator, RelevanceEvaluator, CoherenceEvaluator) can be passed together in the evaluators dict of a single evaluate() call",
       "Each evaluator must be run in a separate evaluate() call — multiple evaluators cannot share the same dataset in one call",
+      "All three evaluators (GroundednessEvaluator, RelevanceEvaluator, CoherenceEvaluator) can be passed together in the evaluators dict of a single evaluate() call",
       "The JSONL evaluation dataset must include 'query', 'response', and 'context' fields to satisfy all three evaluators",
       "Groundedness evaluation does not require a 'context' field — it evaluates the response text alone against the model's internal knowledge"
     ],
-    "answer": [0, 2],
+    "answer": [
+      1,
+      2
+    ],
     "expl": "Correct answers: A and C.\n\nThe evaluate() function accepts multiple evaluators in a single call via the evaluators dict — e.g. evaluators={'groundedness': g_eval, 'relevance': r_eval, 'coherence': c_eval}. All evaluators run against the same dataset in one call (A). The JSONL dataset must include query, response, and context fields (C) — groundedness requires context to measure whether the response is supported by retrieved content (D is false — groundedness specifically needs context, not just the response)."
   },
   {
@@ -424,11 +496,13 @@
     "code": "from azure.ai.evaluation import evaluate, HateUnfairnessEvaluator\nfrom azure.identity import DefaultAzureCredential\n\nevaluator = HateUnfairnessEvaluator(\n    _____={\n        \"subscription_id\": \"00000000-0000-0000-0000-000000000000\",\n        \"resource_group_name\": \"my-rg\",\n        \"project_name\": \"my-foundry-project\"\n    },\n    credential=DefaultAzureCredential()\n)\n\nresults = evaluate(\n    data=\"safety_eval.jsonl\",\n    evaluators={\"hate\": evaluator},\n    output_path=\"results.json\"\n)",
     "options": [
       "project",
-      "azure_ai_project",
       "foundry_project",
+      "azure_ai_project",
       "ai_project"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — azure_ai_project.\n\nThe safety evaluator constructors in the azure-ai-evaluation SDK use the parameter name azure_ai_project to receive the project connection details dict (subscription_id, resource_group_name, project_name). project, foundry_project, and ai_project are not valid parameter names and will raise a TypeError."
   },
   {
@@ -443,7 +517,9 @@
       "The run emits a webhook notification to the application's callback URL — no polling is required",
       "The run status changes to 'waiting' — the application checks run.waiting_for in the response object"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — Status changes to 'requires_action'.\n\nWhen a Foundry agent run reaches a point requiring external input (including HITL approval checkpoints), the run status transitions to 'requires_action'. The application detects this by polling client.agents.get_run() and checking run.status == 'requires_action', then inspecting run.required_action to determine the type of action needed. 'paused' and 'waiting' are not valid run status values. Webhook callbacks are not the native notification mechanism — polling is the correct pattern."
   },
   {
@@ -458,7 +534,9 @@
       "Azure Functions — package the flow as a serverless function with HTTP trigger and consumption-based scaling",
       "Azure Container Apps — containerise the flow and configure KEDA-based HTTP scaling rules"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — Managed Online Endpoint.\n\nManaged Online Endpoints are the native deployment target for real-time Prompt Flow inference in Azure AI Foundry — they expose a REST endpoint, manage compute provisioning, and support auto-scaling configuration (min/max instances, scale-out triggers). Batch Endpoints process large offline batches, not real-time requests. Azure Functions and Container Apps can host flows but require custom packaging and are not native Foundry deployment targets."
   },
   {
@@ -479,7 +557,12 @@
       "Orchestration tool for building and deploying LLM-based pipelines as DAG flows",
       "Programmatic framework for measuring AI quality and safety metrics"
     ],
-    "correctMapping": [0, 1, 2, 3],
+    "correctMapping": [
+      0,
+      1,
+      2,
+      3
+    ],
     "expl": "Correct matches: Hub → shared infrastructure | Project → developer workspace | Prompt Flow → DAG-based pipeline orchestration | Evaluation SDK → quality/safety measurement.\n\nThe Hub/Project hierarchy separates shared enterprise infrastructure from team-specific workspaces. Prompt Flow is the visual and code-based DAG orchestration tool for building LLM pipelines. The Evaluation SDK provides evaluators (groundedness, safety, coherence, relevance) that run programmatically against datasets."
   },
   {
@@ -489,12 +572,15 @@
     "scen": null,
     "text": "An AI-103 content moderation agent incorrectly flags posts from users of a specific language community at 3x the rate of other communities. Which TWO Responsible AI actions address this issue? (Select TWO)",
     "options": [
-      "Run HateUnfairnessEvaluator on a dataset stratified by language community to measure whether error rates differ significantly across groups",
       "Increase the content filter severity threshold to reduce overall flagging volume — this will proportionally reduce false positives for all groups",
-      "Audit the training data or evaluation dataset for representation imbalance across language communities and address gaps",
-      "Deploy a separate content moderation model per language community — this eliminates cross-community comparison"
+      "Deploy a separate content moderation model per language community — this eliminates cross-community comparison",
+      "Run HateUnfairnessEvaluator on a dataset stratified by language community to measure whether error rates differ significantly across groups",
+      "Audit the training data or evaluation dataset for representation imbalance across language communities and address gaps"
     ],
-    "answer": [0, 2],
+    "answer": [
+      2,
+      3
+    ],
     "expl": "Correct answers: A and C.\n\nThe issue is a Fairness violation — differential error rates across demographic/community groups. The correct actions are: (1) measure the disparity systematically using a stratified evaluation dataset and the HateUnfairnessEvaluator (A), and (2) audit and address representation imbalance in the data (C) — skewed training or evaluation data is a common root cause of differential performance. Raising the threshold (B) reduces overall volume but does not address the relative disparity — the 3x ratio may persist. Separate models per community (D) avoids the problem rather than solving it and creates maintenance overhead."
   },
   {
@@ -506,12 +592,14 @@
     "text": "The following code creates an AI agent with a vector index retrieval tool in Azure AI Foundry. The agent is created successfully but never retrieves from the index — it always answers from its own knowledge. Identify the bug.",
     "code": "agent = client.agents.create_agent(\n    model=\"gpt-4o\",\n    name=\"hr-agent\",\n    instructions=\"Answer HR questions using the provided context only.\",\n    tools=[{\"type\": \"azure_ai_search\"}],\n    tool_resources={\n        \"azure_ai_search\": {\n            \"indexes\": [\n                {\n                    \"name\": \"hr-policies\",\n                    \"index_connection_id\": \"/connections/my-search-connection\"\n                }\n            ]\n        }\n    },\n    tool_choice=\"auto\"\n)",
     "options": [
-      "tools=[{\"type\": \"azure_ai_search\"}]",
-      "tool_resources={\"azure_ai_search\": {\"indexes\": [...]}}",
       "instructions=\"Answer HR questions using the provided context only.\"",
+      "tool_resources={\"azure_ai_search\": {\"indexes\": [...]}}",
+      "tools=[{\"type\": \"azure_ai_search\"}]",
       "tool_choice=\"auto\""
     ],
-    "answer": [0],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: A — tools=[{\"type\": \"azure_ai_search\"}].\n\nThe tool type string for the Azure AI Search retrieval tool in the Foundry agents API is \"file_search\" or the Foundry-specific retrieval tool type — not \"azure_ai_search\". Using an unrecognised tool type string means the tool is not registered correctly, so the agent has no retrieval capability despite tool_resources being configured. The tool_resources, instructions, and tool_choice are all correctly set. The fix is to use the correct tool type string as specified in the current Foundry agents API documentation."
   },
   {
@@ -522,11 +610,13 @@
     "text": "A developer needs to implement iterative agentic RAG — the agent queries the vector index, evaluates whether the retrieved content is sufficient, and if not, reformulates the query and retrieves again before generating a final answer. Which agent capability enables this self-directed iteration?",
     "options": [
       "Parallel tool calling — run multiple vector searches simultaneously and merge results before generation",
-      "The agentic loop — on each turn the model decides whether to call the retrieval tool again with a refined query or generate a final answer",
       "Semantic ranker — Azure AI Search automatically refines query terms based on initial result scores",
+      "The agentic loop — on each turn the model decides whether to call the retrieval tool again with a refined query or generate a final answer",
       "Chain-of-thought system prompt — instruct the model to reason before searching, which improves first-retrieval accuracy"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — The agentic loop.\n\nThe agentic loop is the core pattern enabling iterative RAG. On each turn the model evaluates its current context and decides: call the retrieval tool again with a refined query, or generate a final answer. This self-directed iteration is what distinguishes agentic RAG from single-turn RAG. Parallel tool calling runs concurrent searches — not sequential self-evaluating iterations. Semantic ranker refines within a single search call. Chain-of-thought improves reasoning quality but does not drive tool invocation decisions across turns."
   },
   {
@@ -541,7 +631,9 @@
       "client.agents.stop_run(thread_id=thread_id, run_id=run_id)",
       "client.agents.terminate_run(thread_id=thread_id, run_id=run_id)"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — client.agents.cancel_run().\n\nThe azure-ai-projects SDK provides cancel_run() to request cancellation of an in-progress run. The run transitions to 'cancelling' and then 'cancelled' status. delete_run() removes the run record — it does not cancel an in-progress execution. stop_run() and terminate_run() are not valid SDK method names."
   },
   {
@@ -552,11 +644,13 @@
     "text": "A developer is configuring Content Understanding in Azure AI Foundry to process product images and return structured output including product_name, colour, condition (new/used/damaged), and a damage_description field that is only populated when condition is 'damaged'. Which feature of Content Understanding schemas enables conditional field population?",
     "options": [
       "Required field constraints — mark damage_description as required only when condition='damaged'",
-      "Conditional schema logic — Content Understanding schemas support if-then conditions on field population",
       "Optional fields with null default — define damage_description as an optional field; the model populates it only when relevant evidence is present in the image",
+      "Conditional schema logic — Content Understanding schemas support if-then conditions on field population",
       "Post-processing rules — configure a Prompt Flow step after Content Understanding to null out damage_description when condition is not 'damaged'"
     ],
-    "answer": [2],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: C — Optional field with null default.\n\nContent Understanding schemas support optional fields — when a field is defined as optional, the model only populates it when the relevant evidence exists in the input. For damage_description, defining it as optional means the model naturally populates it only when the image shows damage signs. Conditional schema logic with if-then conditions (B) is not a supported Content Understanding schema feature. Required field constraints (A) cannot depend on another field's value. A Prompt Flow post-processing step (D) achieves the same result but adds unnecessary orchestration complexity."
   },
   {
@@ -566,12 +660,14 @@
     "scen": null,
     "text": "An organisation wants to implement AI agent observability in production — tracking which user queries trigger the most tool calls, which tools have the highest failure rate, and the average latency per tool type. Which combination of Azure services provides this analytics capability?",
     "options": [
-      "Azure AI Foundry Tracing connected to Azure Monitor Log Analytics — traces are exported as structured logs and queried with KQL for tool-level analytics",
       "Azure Application Insights — instrument each tool function with custom events and metrics for per-tool analytics",
+      "Azure AI Foundry Tracing connected to Azure Monitor Log Analytics — traces are exported as structured logs and queried with KQL for tool-level analytics",
       "Azure AI Evaluation SDK — run a tool-usage evaluator on a sample of past traces to compute tool call statistics",
       "Azure Cost Management — tool call frequency correlates with API costs and can be used as a proxy for tool usage patterns"
     ],
-    "answer": [0],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: A — Foundry Tracing → Azure Monitor Log Analytics + KQL.\n\nFoundry Tracing exports OpenTelemetry traces to Azure Monitor Log Analytics. Each trace span represents a step (LLM call, tool call, retrieval) with timing and status. KQL queries can aggregate tool call frequency, failure rates, and latency by tool type across all production runs. Application Insights (B) requires manual custom event instrumentation for each tool. The Evaluation SDK (C) measures quality metrics, not operational tool usage statistics. Cost Management (D) provides billing data — not tool-level execution analytics."
   },
   {
@@ -592,7 +688,12 @@
       "Measures whether the response addresses the user's question",
       "Measures the grammatical quality and natural language fluency of the response"
     ],
-    "correctMapping": [0, 1, 2, 3],
+    "correctMapping": [
+      0,
+      1,
+      2,
+      3
+    ],
     "expl": "Correct matches: Groundedness → supported by context | Coherence → logically consistent | Relevance → addresses the question | Fluency → grammatical quality.\n\nThese four are the core quality evaluators in the azure-ai-evaluation SDK. Each measures a distinct dimension of response quality. Groundedness is the primary RAG-specific metric — it catches hallucinations. Coherence measures internal logical consistency. Relevance measures topical alignment with the query. Fluency measures surface-level language quality."
   },
   {
@@ -607,7 +708,9 @@
       "client.projects.delete_resources(agent_id) — Foundry project resource deletion handles all associated assets",
       "Delete the Foundry project — all agents, threads, and files are deleted as part of project deletion"
     ],
-    "answer": [1],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: B — Delete threads and files individually, then delete the agent.\n\nThe Foundry agents API does not cascade-delete threads and files when an agent is deleted. Complete cleanup requires: (1) listing and deleting each thread with delete_thread(), (2) listing and deleting each file with delete_file(), then (3) deleting the agent with delete_agent(). Deleting only the agent leaves orphaned threads and files consuming storage. Project-level deletion (D) is a destructive operation affecting all resources in the project — not appropriate for single-customer cleanup."
   },
   {
@@ -617,12 +720,14 @@
     "scen": null,
     "text": "An AI system used in a hospital to prioritise patient appointment scheduling is being assessed under the EU AI Act. Which risk category applies and what is the primary deployment obligation?",
     "options": [
-      "Minimal risk — healthcare scheduling is an administrative function exempt from EU AI Act obligations",
-      "Limited risk — the system must display a transparency notice to patients informing them AI is used",
       "High risk — the system must complete a conformity assessment and implement human oversight before deployment",
+      "Limited risk — the system must display a transparency notice to patients informing them AI is used",
+      "Minimal risk — healthcare scheduling is an administrative function exempt from EU AI Act obligations",
       "Unacceptable risk — AI systems that affect healthcare resource allocation are prohibited under the EU AI Act"
     ],
-    "answer": [2],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: C — High risk.\n\nThe EU AI Act Annex III explicitly lists AI systems used in healthcare resource allocation and prioritisation as high-risk. High-risk obligations include conformity assessment before deployment, human oversight capability, logging and audit trails, and registration in the EU AI database. It is not minimal risk — healthcare prioritisation directly affects patient welfare. Limited risk applies to chatbots and deepfakes. It is not prohibited — unacceptable risk is reserved for social scoring, real-time public biometric surveillance, and manipulation systems."
   },
   {
@@ -635,11 +740,13 @@
     "code": "from azure.ai.inference import EmbeddingsClient\nfrom azure.identity import DefaultAzureCredential\n\nclient = EmbeddingsClient(\n    endpoint=\"https://myproject.services.ai.azure.com/models\",\n    credential=DefaultAzureCredential()\n)\n\nresponse = client._____(  \n    input=[\"What is the refund policy for damaged goods?\"],\n    model=\"text-embedding-3-large\"\n)\n\nvector = response.data[0].embedding",
     "options": [
       "embed()",
-      "generate()",
       "encode()",
+      "generate()",
       "get_embeddings()"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — generate().\n\nThe EmbeddingsClient in the azure-ai-inference SDK uses the generate() method to create embeddings. It accepts an input list of strings and a model name (deployment name). The response.data[0].embedding returns the vector as a list of floats. embed(), encode(), and get_embeddings() are not valid method names on EmbeddingsClient."
   },
   {
@@ -654,7 +761,9 @@
       "Set the run's max_iterations or max_steps parameter to limit the number of tool calls per run, combined with clear system prompt instructions to avoid repetition",
       "Remove all tool definitions and use chain-of-thought prompting to simulate tool calls internally"
     ],
-    "answer": [2],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: C — max_iterations/max_steps combined with anti-repetition system prompt instructions.\n\nPreventing tool call loops requires two complementary controls: (1) a hard limit on the number of agent turns/iterations per run (max_iterations or max_steps in the run configuration) as a safety ceiling, and (2) system prompt instructions telling the agent not to repeat tool calls if the previous result was insufficient — to either try a different approach or acknowledge inability to complete the task. Temperature=0 (A) makes output deterministic but does not break a loop pattern that is consistently reproduced. max_completion_tokens (B) limits response length, not the number of iterations."
   },
   {
@@ -669,7 +778,10 @@
       "Azure AI Search with a cognitive skillset including OCR skill, Excel extraction, and PowerPoint extraction skills — normalises all three formats to searchable text",
       "A custom Azure Function that uses python-pptx, openpyxl, and PyMuPDF to extract text from each format and writes chunks to the index"
     ],
-    "answer": [0, 2],
+    "answer": [
+      0,
+      2
+    ],
     "expl": "Correct answers: A and C.\n\nContent Understanding (A) natively supports multi-format document processing including PDFs with images, Excel, and PowerPoint — it generates structured output suitable for chunking and embedding in a RAG pipeline. Azure AI Search with a cognitive skillset (C) provides built-in extractors for Office formats and OCR for PDF images — all normalised to searchable text fields in the index. Document Intelligence read model (B) handles PDFs and images but does not support Excel or PowerPoint. A custom Azure Function (D) works but requires maintaining parsing libraries and adds development overhead when managed services provide the capability."
   },
   {
@@ -680,11 +792,13 @@
     "text": "A Foundry project contains a GPT-4o deployment and a text-embedding-3-large deployment. A developer wants to use the azure-ai-inference SDK to call both from the same client endpoint. Which endpoint format is correct for the azure-ai-inference SDK with Azure AI Foundry?",
     "options": [
       "https://{resource-name}.openai.azure.com/ — the standard Azure OpenAI endpoint",
-      "https://{project-name}.services.ai.azure.com/models — the Foundry project inference endpoint",
+      "https://{hub-name}.azureml.net/inference/ — the Azure Machine Learning inference endpoint",
       "https://api.cognitive.microsoft.com/openai/ — the global Azure Cognitive Services endpoint",
-      "https://{hub-name}.azureml.net/inference/ — the Azure Machine Learning inference endpoint"
+      "https://{project-name}.services.ai.azure.com/models — the Foundry project inference endpoint"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — https://{project-name}.services.ai.azure.com/models.\n\nThe azure-ai-inference SDK connects to Azure AI Foundry using the project-level inference endpoint in the format https://{project-name}.services.ai.azure.com/models. This single endpoint surfaces all model deployments in the project — both the GPT-4o and embedding deployments are accessible from the same client. The Azure OpenAI endpoint (A) is for the openai SDK pattern. The global Cognitive Services endpoint (C) is a legacy URL. The AzureML endpoint (D) is for custom model deployments on AML compute, not Foundry."
   },
   {
@@ -701,7 +815,9 @@
       "tool_resources={\"file_search\": {\"vector_store_ids\": [file.id]}}",
       "tools=[{\"type\": \"file_search\"}]"
     ],
-    "answer": [2],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: C — vector_store_ids contains file.id instead of vector_store.id.\n\nThe tool_resources for file_search must reference the vector store ID (vector_store.id), not the raw file ID (file.id). The file is uploaded and added to a vector store — the agent accesses files through the vector store, not directly by file ID. Passing file.id in vector_store_ids means the agent is looking for a vector store with an ID that matches a file ID — which does not exist. The fix is: \"vector_store_ids\": [vector_store.id]."
   },
   {
@@ -712,11 +828,13 @@
     "text": "A developer wants to test different system prompt configurations for a Foundry agent interactively — trying 4 different system messages against the same set of 10 test questions and comparing the responses side by side. Which Foundry tool is designed for this interactive comparison workflow with no code required?",
     "options": [
       "Azure AI Evaluation SDK — run evaluate() four times with different system prompts and compare output JSON files",
-      "Foundry Playground — supports multi-configuration testing by creating multiple agent configurations and comparing responses interactively",
+      "Azure AI Studio model catalog — the catalog comparison view shows side-by-side outputs for multiple model configurations",
       "Prompt Flow — build a flow with 4 parallel LLM nodes, each with a different system prompt, and evaluate outputs",
-      "Azure AI Studio model catalog — the catalog comparison view shows side-by-side outputs for multiple model configurations"
+      "Foundry Playground — supports multi-configuration testing by creating multiple agent configurations and comparing responses interactively"
     ],
-    "answer": [1],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: B — Foundry Playground.\n\nThe Foundry Playground is the interactive no-code tool for testing and comparing model/agent configurations. It supports creating multiple system prompt configurations and running the same queries against them for direct response comparison. The Evaluation SDK (A) requires writing Python code. Prompt Flow (C) is a code/visual DAG tool — not designed for quick interactive comparisons. The model catalog (D) compares models, not system prompt configurations on the same model."
   },
   {
@@ -726,12 +844,14 @@
     "scen": null,
     "text": "An organisation's AI agent generates customer-facing content. During evaluation, they find the agent produces inconsistent responses — giving different answers to the same question depending on minor phrasing variations. Which Responsible AI principle is most directly violated and what is the recommended mitigation?",
     "options": [
-      "Fairness — inconsistent answers may disadvantage certain customer groups; add demographic fairness testing",
       "Reliability and Safety — inconsistency is a reliability failure; reduce temperature, add system prompt consistency instructions, and test extensively across input variations",
+      "Fairness — inconsistent answers may disadvantage certain customer groups; add demographic fairness testing",
       "Transparency — customers cannot understand why they receive different answers; add an explanation UI",
       "Inclusiveness — inconsistency disproportionately affects users who phrase questions differently; expand training data diversity"
     ],
-    "answer": [1],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: B — Reliability and Safety.\n\nReliability is specifically about performing consistently and predictably under varied conditions. A system that gives different answers to the same question with minor phrasing changes is unreliable. Mitigations include: lowering temperature for more deterministic output, adding system prompt instructions for consistency, few-shot examples showing consistent response patterns, and robust testing across phrasing variations. Fairness (A) is about demographic group disparities. Transparency (C) is about explainability. Inclusiveness (D) is about accessibility for diverse user populations."
   },
   {
@@ -743,10 +863,12 @@
     "options": [
       "run.error_message",
       "run.failure_reason",
-      "run.last_error",
-      "run.status_details"
+      "run.status_details",
+      "run.last_error"
     ],
-    "answer": [2],
+    "answer": [
+      3
+    ],
     "expl": "Correct answer: C — run.last_error.\n\nWhen an Azure AI Foundry agent run fails, the error details are available in run.last_error — a LastErrorDetails object containing a code and message field describing the failure reason. run.error_message, run.failure_reason, and run.status_details are not valid properties on the run object in the azure-ai-projects SDK."
   },
   {
@@ -758,12 +880,14 @@
     "text": "A developer is submitting a multimodal message to a GPT-4o deployment using the azure-ai-inference SDK. The message contains an image (base64-encoded) and a text question. Complete the blank with the correct content item class for the image.",
     "code": "from azure.ai.inference import ChatCompletionsClient\nfrom azure.ai.inference.models import (\n    UserMessage, TextContentItem,\n    _____, ImageUrl\n)\nfrom azure.identity import DefaultAzureCredential\n\nclient = ChatCompletionsClient(\n    endpoint=endpoint,\n    credential=DefaultAzureCredential()\n)\n\nresponse = client.complete(\n    messages=[\n        UserMessage(content=[\n            _____(image_url=ImageUrl(url=f\"data:image/jpeg;base64,{b64_image}\")),\n            TextContentItem(text=\"Describe the damage visible in this image\")\n        ])\n    ],\n    model=\"gpt-4o\"\n)",
     "options": [
-      "ImageContentItem",
-      "ImageMessage",
       "VisionContentItem",
+      "ImageMessage",
+      "ImageContentItem",
       "Base64ContentItem"
     ],
-    "answer": [0],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: A — ImageContentItem.\n\nIn the azure-ai-inference SDK, multimodal user message content arrays use ImageContentItem for image inputs and TextContentItem for text inputs. ImageContentItem accepts an image_url parameter of type ImageUrl which holds the URL or base64 data URI. ImageMessage, VisionContentItem, and Base64ContentItem are not valid class names in this SDK."
   },
   {
@@ -773,12 +897,15 @@
     "scen": null,
     "text": "A team is running a red-teaming exercise on their Foundry agent before production launch. Which TWO red-teaming scenarios are most relevant for an AI-103 agentic RAG solution? (Select TWO)",
     "options": [
-      "Prompt injection via retrieved documents — malicious content in indexed documents attempts to override the agent's instructions",
       "SQL injection via function tool parameters — the agent constructs SQL queries using user input without sanitisation",
-      "Cross-site scripting (XSS) via agent responses — the agent embeds JavaScript in HTML responses rendered by the client",
-      "Context window stuffing — a user submits an extremely long query to exceed the model's context window and trigger unpredictable behaviour"
+      "Prompt injection via retrieved documents — malicious content in indexed documents attempts to override the agent's instructions",
+      "Context window stuffing — a user submits an extremely long query to exceed the model's context window and trigger unpredictable behaviour",
+      "Cross-site scripting (XSS) via agent responses — the agent embeds JavaScript in HTML responses rendered by the client"
     ],
-    "answer": [0, 3],
+    "answer": [
+      1,
+      2
+    ],
     "expl": "Correct answers: A and D.\n\nFor agentic RAG solutions, the two most AI-specific red-teaming scenarios are: (1) Prompt injection via retrieved documents (A) — malicious content embedded in indexed source documents (e.g. hidden instructions like 'ignore previous instructions and...') that the retrieval tool surfaces and the model acts on, and (2) context window stuffing (D) — submitting extremely long inputs to consume the context window, potentially crowding out retrieved context or causing unexpected model behaviour. SQL injection (B) applies only if the agent generates SQL queries from user input. XSS (C) is a web application vulnerability unrelated to LLM agent behaviour."
   },
   {
@@ -789,11 +916,13 @@
     "text": "An Azure AI Foundry agent needs to access a SharePoint document library to retrieve policy documents as part of its retrieval pipeline. The SharePoint site uses Microsoft 365 authentication. Which approach correctly connects the agent to SharePoint content?",
     "options": [
       "Configure a SharePoint connector in Azure AI Foundry — Foundry has a native SharePoint content source that syncs to the vector index automatically",
-      "Use Microsoft Graph API as a function tool — the agent calls Graph API with a delegated or application token to retrieve SharePoint documents, then passes them as context",
+      "Connect SharePoint directly as a data source in Azure AI Search using the SharePoint Online indexer, which handles Microsoft 365 authentication natively",
       "Download SharePoint documents to Azure Blob Storage via Power Automate, then index Blob Storage as the vector index source",
-      "Connect SharePoint directly as a data source in Azure AI Search using the SharePoint Online indexer, which handles Microsoft 365 authentication natively"
+      "Use Microsoft Graph API as a function tool — the agent calls Graph API with a delegated or application token to retrieve SharePoint documents, then passes them as context"
     ],
-    "answer": [3],
+    "answer": [
+      1
+    ],
     "expl": "Correct answer: D — Azure AI Search SharePoint Online indexer.\n\nAzure AI Search has a native SharePoint Online data source connector that authenticates to Microsoft 365 using app registration credentials, crawls document libraries, and populates the search index. This is the most architecturally clean solution — the vector index stays in sync without custom tooling. A native Foundry SharePoint connector (A) does not currently exist as a built-in feature. Microsoft Graph as a function tool (B) works but adds per-query API calls for content that could be indexed once. Power Automate sync (C) adds an unnecessary ETL layer and introduces sync lag."
   },
   {
@@ -803,12 +932,14 @@
     "scen": null,
     "text": "A developer is using Azure AI Foundry to build a solution that generates short product descriptions from structured product data (JSON). The team wants to ensure that every generated description mentions the product name, key feature, and price — and never exceeds 50 words. Which technique most reliably enforces these structural constraints on GPT-4o outputs?",
     "options": [
-      "Lower temperature to 0 — deterministic outputs are more likely to follow instructions precisely",
       "Use structured outputs (JSON mode or response_format with a schema) combined with a detailed system prompt specifying required fields and word limit",
+      "Lower temperature to 0 — deterministic outputs are more likely to follow instructions precisely",
       "Fine-tune GPT-4o on 1,000 example product descriptions that follow the required format",
       "Add a post-processing step that truncates all responses to 50 words and appends missing fields with placeholder values"
     ],
-    "answer": [1],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: B — Structured outputs with response_format schema + detailed system prompt.\n\nStructured outputs (response_format with a JSON schema) enforce that the model returns specific fields, and a detailed system prompt with explicit constraints (required fields, max word count) provides the generation guidance. This combination is the most reliable enforcement mechanism. Temperature 0 (A) reduces randomness but does not enforce structural requirements. Fine-tuning (C) is expensive, requires retraining when requirements change, and is not necessary for a formatting task that prompt engineering handles well. Post-processing truncation (D) is a brittle fallback that corrupts valid sentences and doesn't enforce field presence."
   },
   {
@@ -820,12 +951,14 @@
     "text": "The following code runs a Foundry agent evaluation using the Azure AI Evaluation SDK. The evaluate() call completes but the results dictionary is empty — no metric scores are returned. Identify the most likely bug.",
     "code": "from azure.ai.evaluation import evaluate, GroundednessEvaluator\nfrom azure.identity import DefaultAzureCredential\n\nevaluator = GroundednessEvaluator(\n    azure_ai_project={\n        \"subscription_id\": sub_id,\n        \"resource_group_name\": rg,\n        \"project_name\": project\n    },\n    credential=DefaultAzureCredential()\n)\n\nresults = evaluate(\n    data=\"eval_dataset.jsonl\",\n    evaluators={\"groundedness\": evaluator},\n    output_path=\"results.json\"\n)\n\nprint(results)",
     "options": [
-      "evaluators={\"groundedness\": evaluator}",
       "data=\"eval_dataset.jsonl\" — the JSONL file is missing the 'context' field required by GroundednessEvaluator",
+      "evaluators={\"groundedness\": evaluator}",
       "output_path=\"results.json\"",
       "credential=DefaultAzureCredential()"
     ],
-    "answer": [1],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: B — JSONL file missing the 'context' field.\n\nGroundednessEvaluator requires each JSONL record to contain 'query', 'response', and 'context' fields. If 'context' is absent, the evaluator cannot measure whether the response is grounded in retrieved content — it either skips those records or returns null scores, resulting in an empty or incomplete results dict. The evaluators dict, output_path, and credential are all correctly configured. Always verify the JSONL schema matches each evaluator's required input columns."
   },
   {
@@ -840,7 +973,9 @@
       "Deploy the model using a private endpoint — private endpoint deployments are excluded from automatic updates",
       "Set update_policy='manual' on the Azure OpenAI model deployment resource in the Azure portal"
     ],
-    "answer": [0],
+    "answer": [
+      0
+    ],
     "expl": "Correct answer: A — Deploy a specific model version rather than 'latest'.\n\nWhen creating an Azure OpenAI model deployment, specifying a fixed version (e.g. gpt-4o-2024-11-20) ensures the deployment uses that exact model version and does not auto-update when new versions are released. Deploying with 'latest' or a rolling version alias will update automatically. There is no project-level model locking setting (B). Private endpoints control network access, not model versioning (C). update_policy is not a valid Azure OpenAI deployment property (D)."
   },
   {
@@ -851,11 +986,13 @@
     "text": "A developer needs to implement conversation memory that summarises older messages to stay within the model's context window as conversations grow long. Which pattern implements this correctly in a Foundry agent?",
     "options": [
       "Configure the agent's max_prompt_tokens parameter — the agent automatically summarises older messages when the limit is reached",
-      "Implement a summarisation step in the application layer: when message count exceeds a threshold, call the LLM to summarise older messages, replace them with the summary, and continue the thread",
       "Use Azure AI Search to store all messages and retrieve only the most recent 5 using a timestamp filter",
+      "Implement a summarisation step in the application layer: when message count exceeds a threshold, call the LLM to summarise older messages, replace them with the summary, and continue the thread",
       "Increase the model deployment's max_tokens to 128K — a larger context window eliminates the need for summarisation"
     ],
-    "answer": [1],
+    "answer": [
+      2
+    ],
     "expl": "Correct answer: B — Application-layer summarisation step.\n\nConversation memory management with summarisation must be implemented in the application layer. When the thread exceeds a message threshold, the application calls the LLM to generate a concise summary of older messages, creates a new synthetic message with the summary, and either trims the thread or starts a new one with the summary as context. max_prompt_tokens (A) truncates older messages but does not summarise them — information is lost. Using AI Search as a message store (C) retrieves by recency but misses context from omitted messages. Larger context windows (D) delay the problem but do not solve it for very long conversations."
   },
   {
@@ -866,15 +1003,15 @@
     "scenlabel": null,
     "text": "In Azure AI Foundry, which identity is most appropriate for production services calling the project inference endpoint from an Azure-hosted backend?",
     "options": [
-      "Managed identity of the hosting service (e.g., Azure App Service or Container Apps)",
+      "A shared secret embedded in the Docker image",
       "User-assigned personal Microsoft Entra ID of the lead developer",
       "An API key stored in the client-side JavaScript",
-      "A shared secret embedded in the Docker image"
+      "Managed identity of the hosting service (e.g., Azure App Service or Container Apps)"
     ],
     "answer": [
-      0
+      3
     ],
-    "expl": "Correct answer: A — Use the managed identity of the hosting service for least privilege, secretless auth, and automatic rotation. Personal identities (B) are fragile and non-compliant. Client-side keys (C) leak. Hardcoded secrets (D) are insecure."
+    "expl": "Correct answer: D — Use the managed identity of the hosting service for least privilege, secretless auth, and automatic rotation. Personal identities (B) are fragile and non-compliant. Client-side keys (C) leak. Hardcoded secrets (D) are insecure."
   },
   {
     "tag": "f",
@@ -886,15 +1023,15 @@
     "text": "Complete the blank to create a ChatCompletionsClient for Azure AI Foundry project inference with DefaultAzureCredential.",
     "code": "from azure.ai.inference import ChatCompletionsClient\nfrom azure.identity import DefaultAzureCredential\n\nclient = ChatCompletionsClient(\n    endpoint=\"https://myproject.services.ai.azure.com/models\",\n    credential=_____\n)",
     "options": [
-      "DefaultAzureCredential()",
       "AzureKeyCredential(os.environ[\"AOAI_KEY\"])",
+      "DefaultAzureCredential()",
       "InteractiveBrowserCredential()",
       "ClientSecretCredential(\"tenant\",\"client\",\"secret\")"
     ],
     "answer": [
-      0
+      1
     ],
-    "expl": "Correct answer: A — DefaultAzureCredential() is the recommended default for server-side apps on Azure. Others (B–D) are valid in some contexts, but DefaultAzureCredential simplifies local+cloud auth flows."
+    "expl": "Correct answer: B — DefaultAzureCredential() is the recommended default for server-side apps on Azure. Others (B–D) are valid in some contexts, but DefaultAzureCredential simplifies local+cloud auth flows."
   },
   {
     "tag": "f",
@@ -931,16 +1068,16 @@
     "scenlabel": "Scenario — Private Compliance Q&A",
     "text": "Which TWO configurations are required to satisfy the networking constraints for the Foundry solution? (Select TWO)",
     "options": [
-      "Enable private endpoint for the Foundry project inference endpoint",
       "Configure public network access with IP allowlist for the office IP ranges",
-      "Integrate the application compute with a VNet that can resolve the private DNS zone for the endpoint",
-      "Disable Azure Monitor export because private endpoints cannot send telemetry"
+      "Enable private endpoint for the Foundry project inference endpoint",
+      "Disable Azure Monitor export because private endpoints cannot send telemetry",
+      "Integrate the application compute with a VNet that can resolve the private DNS zone for the endpoint"
     ],
     "answer": [
-      0,
-      2
+      1,
+      3
     ],
-    "expl": "Correct answers: A and C — Private endpoints + VNet integration and private DNS resolution satisfy no-public-egress requirements. IP allowlists (B) still use public endpoints. Telemetry export (D) is supported; use private link/diagnostic settings where applicable."
+    "expl": "Correct answers: B and D — Private endpoints + VNet integration and private DNS resolution satisfy no-public-egress requirements. IP allowlists (B) still use public endpoints. Telemetry export (D) is supported; use private link/diagnostic settings where applicable."
   },
   {
     "tag": "r",
@@ -971,14 +1108,14 @@
     "code": "from azure.ai.inference import EmbeddingsClient\nfrom azure.identity import DefaultAzureCredential\n\nclient = EmbeddingsClient(\n    endpoint=\"https://myproject.services.ai.azure.com/models\",\n    credential=DefaultAzureCredential()\n)\n\nresp = client.generate(\n    input=[\"refund policy\"],\n    model=\"text-embedding-3-large\"\n)\nprint(len(resp.data[0].embedding))",
     "options": [
       "endpoint should be the Azure OpenAI resource URL, not the Foundry project URL",
-      "model must be the exact deployment name configured in the Foundry project",
       "generate() should be embed()",
+      "model must be the exact deployment name configured in the Foundry project",
       "DefaultAzureCredential is not supported for embeddings"
     ],
     "answer": [
-      1
+      2
     ],
-    "expl": "Correct answer: B — Use the deployment name, not the base model name. Foundry routes by deployment identifier."
+    "expl": "Correct answer: C — Use the deployment name, not the base model name. Foundry routes by deployment identifier."
   },
   {
     "tag": "c",
@@ -989,14 +1126,14 @@
     "text": "You are designing Content Understanding to extract product_name, sku, and defects from product photos. Which configuration best ensures consistent structured outputs?",
     "options": [
       "Free-form prompt with examples in the description field",
-      "Define a custom output schema with required fields and validate downstream",
       "Use a separate LLM step to post-process the raw output",
+      "Define a custom output schema with required fields and validate downstream",
       "Increase sampling to 1.2 to explore more possibilities"
     ],
     "answer": [
-      1
+      2
     ],
-    "expl": "Correct answer: B — Custom schema enforces fields and types, simplifying downstream processing. Free-form prompts (A) are inconsistent. Post-processing (C) adds variability. Higher sampling (D) reduces consistency."
+    "expl": "Correct answer: C — Custom schema enforces fields and types, simplifying downstream processing. Free-form prompts (A) are inconsistent. Post-processing (C) adds variability. Higher sampling (D) reduces consistency."
   },
   {
     "tag": "s",
@@ -1030,16 +1167,16 @@
     "scenlabel": null,
     "text": "Which TWO actions reduce costs for a Prompt Flow real-time endpoint without sacrificing peak throughput? (Select TWO)",
     "options": [
-      "Set min_instances to 0 and max_instances to 10 with scale-out rules",
       "Batch multiple user requests into a single LLM call when semantically unrelated",
       "Cache deterministic intermediate node outputs (e.g., prompt templates) with a key on inputs",
+      "Set min_instances to 0 and max_instances to 10 with scale-out rules",
       "Use a smaller model for embedding generation while keeping the chat model unchanged"
     ],
     "answer": [
-      2,
+      1,
       3
     ],
-    "expl": "Correct answers: C and D — Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (A) may increase cold-start latency. Batching unrelated user inputs (B) breaks isolation and traceability."
+    "expl": "Correct answers: B and D — Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (A) may increase cold-start latency. Batching unrelated user inputs (B) breaks isolation and traceability."
   },
   {
     "tag": "r",
@@ -1050,15 +1187,15 @@
     "text": "A hospital triage agent assists nurses by summarising patient notes. Which TWO Responsible AI practices are most critical?",
     "options": [
       "Human oversight and final decision by clinical staff",
-      "Disabling all logs to protect privacy",
       "Data minimisation and HIPAA-aligned logging/retention",
+      "Disabling all logs to protect privacy",
       "Allow the agent to auto-discharge low-risk patients to reduce workload"
     ],
     "answer": [
       0,
-      2
+      1
     ],
-    "expl": "Correct answers: A and C — Human-in-the-loop for clinical context and strict privacy controls. Disabling all logs (B) removes auditability. Autonomy to discharge (D) violates oversight."
+    "expl": "Correct answers: A and B — Human-in-the-loop for clinical context and strict privacy controls. Disabling all logs (B) removes auditability. Autonomy to discharge (D) violates oversight."
   },
   {
     "tag": "f",
@@ -1071,14 +1208,14 @@
     "code": "from azure.ai.inference import ChatCompletionsClient\nfrom azure.identity import DefaultAzureCredential\n\nclient = ChatCompletionsClient(endpoint=ep, credential=DefaultAzureCredential())\n\nwith client.complete_stream(messages=[{\"role\":\"user\",\"content\":\"Hello\"}], model=deployment) as _____:\n    for event in stream:\n        if hasattr(event, \"delta\") and event.delta and hasattr(event.delta, \"content\"):\n            for c in event.delta.content:\n                if hasattr(c, \"text\"):\n                    print(c.text.value, end=\"\")",
     "options": [
       "tokens",
-      "stream",
+      "events",
       "response",
-      "events"
+      "stream"
     ],
     "answer": [
-      1
+      3
     ],
-    "expl": "Correct answer: B — Use 'as stream' to iterate events emitted by complete_stream()."
+    "expl": "Correct answer: D — Use 'as stream' to iterate events emitted by complete_stream()."
   },
   {
     "tag": "f",
@@ -1088,15 +1225,15 @@
     "scenlabel": null,
     "text": "An agent repeatedly calls a tool that returned an error, causing long latency. What is the most effective immediate mitigation?",
     "options": [
-      "Lower temperature to 0",
       "Set max_steps for the run and implement exponential backoff with capped retries in the tool",
+      "Lower temperature to 0",
       "Increase max_tokens",
       "Scale up the compute SKU"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Limit iterations and handle retries with backoff. Temperature, tokens, or compute do not address failing tools."
+    "expl": "Correct answer: A — Limit iterations and handle retries with backoff. Temperature, tokens, or compute do not address failing tools."
   },
   {
     "tag": "f",
@@ -1133,15 +1270,15 @@
     "scenlabel": "Scenario — Multi-tenant Retail",
     "text": "What is the best isolation boundary for per-tenant data and compute while keeping shared governance?",
     "options": [
-      "One shared project and shared index with tenantId field filter",
       "Separate Foundry projects per tenant under the same hub; per-tenant search indexes and deployments",
+      "One shared project and shared index with tenantId field filter",
       "Separate subscriptions per tenant",
       "Single global index and agent; tenant isolation handled in prompts"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Per-tenant projects provide isolation of connections, assets, and observability, governed by the shared hub."
+    "expl": "Correct answer: A — Per-tenant projects provide isolation of connections, assets, and observability, governed by the shared hub."
   },
   {
     "tag": "f",
@@ -1155,13 +1292,13 @@
     "options": [
       "tools uses wrong tool type key",
       "index_connection_id must be a full Azure Resource ID",
-      "The tool type string is misspelled; should be \"file_search\" (underscore), not \"file-search\" (hyphen)",
-      "instructions prevent retrieval"
+      "instructions prevent retrieval",
+      "The tool type string is misspelled; should be \"file_search\" (underscore), not \"file-search\" (hyphen)"
     ],
     "answer": [
-      2
+      3
     ],
-    "expl": "Correct answer: C — The tool type string must be 'file_search'. A hyphen makes the tool unrecognised."
+    "expl": "Correct answer: D — The tool type string must be 'file_search'. A hyphen makes the tool unrecognised."
   },
   {
     "tag": "c",
@@ -1172,15 +1309,15 @@
     "text": "You must reject violent or sexual content and log policy violations. Which TWO layers should you configure?",
     "options": [
       "Azure OpenAI content filters on the model deployment",
-      "Only a system prompt that says 'do not produce violent content'",
       "Application-side moderation pipeline to log, block, and route violations",
+      "Only a system prompt that says 'do not produce violent content'",
       "Only rely on the evaluation SDK once before go-live"
     ],
     "answer": [
       0,
-      2
+      1
     ],
-    "expl": "Correct answers: A and C — Infrastructure filters plus app moderation with logging create defence-in-depth."
+    "expl": "Correct answers: A and B — Infrastructure filters plus app moderation with logging create defence-in-depth."
   },
   {
     "tag": "f",
@@ -1191,14 +1328,14 @@
     "text": "Which evaluation dataset format is typically used with the Azure AI Evaluation SDK for batch scoring?",
     "options": [
       "CSV with columns q,a,ctx",
-      "JSON Lines (JSONL) with fields like query, response, context",
+      "Parquet with nested maps",
       "YAML with question/answer nodes",
-      "Parquet with nested maps"
+      "JSON Lines (JSONL) with fields like query, response, context"
     ],
     "answer": [
-      1
+      3
     ],
-    "expl": "Correct answer: B — JSONL is the primary dataset format the SDK examples target, supporting arbitrary fields."
+    "expl": "Correct answer: D — JSONL is the primary dataset format the SDK examples target, supporting arbitrary fields."
   },
   {
     "tag": "f",
@@ -1210,15 +1347,15 @@
     "text": "Complete the blank to submit multiple tool outputs in one call.",
     "code": "results = [\n  {\"tool_call_id\": tc1.id, \"output\": out1},\n  {\"tool_call_id\": tc2.id, \"output\": out2}\n]\nclient.agents.submit_tool_outputs_to_run(\n  thread_id=thread.id,\n  run_id=run.id,\n  tool_outputs=_____\n)",
     "options": [
-      "results[0]",
       "results",
+      "results[0]",
       "out1 + out2",
       "{\"results\": results}"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Pass the full list 'results'; the API expects all pending outputs together."
+    "expl": "Correct answer: A — Pass the full list 'results'; the API expects all pending outputs together."
   },
   {
     "tag": "s",
@@ -1228,15 +1365,15 @@
     "scenlabel": "Scenario — EU Credit Assessment",
     "text": "What is the correct compliance step before go-live?",
     "options": [
-      "Post-deployment conformity check within 12 months",
       "Complete a conformity assessment and implement human oversight prior to deployment",
+      "Post-deployment conformity check within 12 months",
       "Publish your model weights",
       "Encrypt logs and skip human review"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — High-risk systems require conformity assessment and human oversight before deployment."
+    "expl": "Correct answer: A — High-risk systems require conformity assessment and human oversight before deployment."
   },
   {
     "tag": "f",
@@ -1275,14 +1412,14 @@
     "options": [
       "Shorter chunks and overlap tuned to domain",
       "Disable retrieval to force the model to rely on prior knowledge",
-      "Groundedness-aware system prompt that instructs citing sources and refusing when context is insufficient",
-      "Use temperature=1.5 to explore more answers"
+      "Use temperature=1.5 to explore more answers",
+      "Groundedness-aware system prompt that instructs citing sources and refusing when context is insufficient"
     ],
     "answer": [
       0,
-      2
+      3
     ],
-    "expl": "Correct answers: A and C — Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
+    "expl": "Correct answers: A and D — Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
   },
   {
     "tag": "f",
@@ -1312,15 +1449,15 @@
     "scenlabel": null,
     "text": "Content Understanding must populate defect_description only when defects=true. What is the simplest approach?",
     "options": [
-      "Make defect_description optional and leave null when not applicable",
       "Define if-then schema rules",
+      "Make defect_description optional and leave null when not applicable",
       "Always require defect_description and fill 'N/A'",
       "Post-process with a Prompt Flow step"
     ],
     "answer": [
-      0
+      1
     ],
-    "expl": "Correct answer: A — Optional fields naturally populate only when evidence exists."
+    "expl": "Correct answer: B — Optional fields naturally populate only when evidence exists."
   },
   {
     "tag": "f",
@@ -1331,14 +1468,14 @@
     "text": "Which trace data best pinpoints slow tool calls in production?",
     "options": [
       "LLM token usage metrics",
-      "OpenTelemetry spans from Foundry Tracing exported to Log Analytics",
       "Console logs in the application",
+      "OpenTelemetry spans from Foundry Tracing exported to Log Analytics",
       "Azure Cost Management invoices"
     ],
     "answer": [
-      1
+      2
     ],
-    "expl": "Correct answer: B — Tracing with spans and durations supports KQL analysis by tool type."
+    "expl": "Correct answer: C — Tracing with spans and durations supports KQL analysis by tool type."
   },
   {
     "tag": "s",
@@ -1377,15 +1514,15 @@
     "text": "Complete the blank to acquire a token with client credentials for a function tool calling an internal API.",
     "code": "from msal import ConfidentialClientApplication\n\ndef acquire_token(scope: str) -> str:\n    app = ConfidentialClientApplication(\n        client_id=CLIENT_ID,\n        client_credential=CLIENT_SECRET,\n        authority=f\"https://login.microsoftonline.com/{TENANT_ID}\"\n    )\n    result = app.acquire_token_for_client(scopes=[scope])\n    return result[_____]",
     "options": [
-      "\"id_token\"",
       "\"access_token\"",
+      "\"id_token\"",
       "\"refresh_token\"",
       "\"token\""
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Access token is required for Authorization: Bearer."
+    "expl": "Correct answer: A — Access token is required for Authorization: Bearer."
   },
   {
     "tag": "r",
@@ -1396,14 +1533,14 @@
     "text": "Which practice improves Transparency for an AI-103 enterprise agent?",
     "options": [
       "Hide model names to reduce confusion",
-      "Display AI usage notices and expose an explanation view of retrieved sources and tool calls",
+      "Randomise responses for variety",
       "Disable logs for privacy",
-      "Randomise responses for variety"
+      "Display AI usage notices and expose an explanation view of retrieved sources and tool calls"
     ],
     "answer": [
-      1
+      3
     ],
-    "expl": "Correct answer: B — Inform users and provide source/tool visibility to increase transparency."
+    "expl": "Correct answer: D — Inform users and provide source/tool visibility to increase transparency."
   },
   {
     "tag": "f",
@@ -1414,9 +1551,9 @@
     "text": "Which TWO are valid ways to reduce latency in a RAG agent?",
     "options": [
       "Use parallel tool calls when retrieving from multiple indexes",
-      "Disable batching for embedding generation",
+      "Use semantic ranker without vector fields",
       "Cache retrieval results for repeated queries with short TTL",
-      "Use semantic ranker without vector fields"
+      "Disable batching for embedding generation"
     ],
     "answer": [
       0,
@@ -1435,14 +1572,14 @@
     "code": "client.agents.terminate_run(thread_id=tid, run_id=rid)",
     "options": [
       "client.agents.delete_run(thread_id=tid, run_id=rid)",
-      "client.agents.cancel_run(thread_id=tid, run_id=rid)",
       "client.agents.stop_run(thread_id=tid, run_id=rid)",
+      "client.agents.cancel_run(thread_id=tid, run_id=rid)",
       "client.agents.abort_run(thread_id=tid, run_id=rid)"
     ],
     "answer": [
-      1
+      2
     ],
-    "expl": "Correct answer: B — cancel_run() is the valid method to request cancellation."
+    "expl": "Correct answer: C — cancel_run() is the valid method to request cancellation."
   },
   {
     "tag": "c",
@@ -1470,15 +1607,15 @@
     "scenlabel": "Scenario — Shared Files for Agent",
     "text": "How should you configure the agent?",
     "options": [
-      "Upload files each session in the first user message",
       "Attach file_ids to the agent’s code_interpreter tool_resources at creation",
+      "Upload files each session in the first user message",
       "Place files in Blob and paste SAS URLs into prompts",
       "Use the run.attach_files() API for each turn"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Pre-attach file_ids to the agent so they are available across sessions."
+    "expl": "Correct answer: A — Pre-attach file_ids to the agent so they are available across sessions."
   },
   {
     "tag": "f",
@@ -1517,15 +1654,15 @@
     "text": "Fill the blank to register a function as a tool using FunctionTool.",
     "code": "from azure.ai.projects.models import FunctionTool, ToolSet\n\ndef geoip(ip: str) -> str:\n    # ...\n    return \"{\\\"country\\\":\\\"US\\\"}\"\n\nft = FunctionTool(functions=_____)\nts = ToolSet(); ts.add(ft)",
     "options": [
-      "{geoip}",
-      "[geoip]",
       "(geoip,)",
+      "[geoip]",
+      "{geoip}",
       "geoip"
     ],
     "answer": [
-      0
+      2
     ],
-    "expl": "Correct answer: A — The SDK expects a Python set of function references."
+    "expl": "Correct answer: C — The SDK expects a Python set of function references."
   },
   {
     "tag": "r",
@@ -1536,15 +1673,15 @@
     "text": "Which TWO steps help detect unfair performance across groups in a moderation model?",
     "options": [
       "Evaluate on a stratified dataset with group labels",
+      "Increase sampling temperature for more diverse outputs",
       "Only measure overall accuracy on a random sample",
-      "Use HateUnfairnessEvaluator to compute disparity metrics",
-      "Increase sampling temperature for more diverse outputs"
+      "Use HateUnfairnessEvaluator to compute disparity metrics"
     ],
     "answer": [
       0,
-      2
+      3
     ],
-    "expl": "Correct answers: A and C — Group-aware evaluation is necessary to detect disparities."
+    "expl": "Correct answers: A and D — Group-aware evaluation is necessary to detect disparities."
   },
   {
     "tag": "f",
@@ -1554,15 +1691,15 @@
     "scenlabel": null,
     "text": "Your agent should not auto-update to new base model versions. What should you configure on deployment?",
     "options": [
-      "Use a fixed model version identifier instead of 'latest'",
-      "Disable tracing",
       "Lock the hub",
+      "Disable tracing",
+      "Use a fixed model version identifier instead of 'latest'",
       "Set temperature=0"
     ],
     "answer": [
-      0
+      2
     ],
-    "expl": "Correct answer: A — Pin to a specific model version to avoid drift."
+    "expl": "Correct answer: C — Pin to a specific model version to avoid drift."
   },
   {
     "tag": "s",
@@ -1572,16 +1709,16 @@
     "scenlabel": "Scenario — Prompt Comparison",
     "text": "Which TWO options meet the requirement?",
     "options": [
-      "Foundry Playground with multiple configurations",
-      "Prompt Flow DAG with four LLM nodes and custom UI",
+      "Model catalog comparison view for prompts",
       "Evaluation SDK scripts",
-      "Model catalog comparison view for prompts"
+      "Foundry Playground with multiple configurations",
+      "Prompt Flow DAG with four LLM nodes and custom UI"
     ],
     "answer": [
-      0,
-      1
+      2,
+      3
     ],
-    "expl": "Correct answers: A and B — Playground is no-code; Prompt Flow can be configured visually, though it’s more effort. SDK (C) requires code; catalog compares models, not prompt variants (D)."
+    "expl": "Correct answers: C and D — Playground is no-code; Prompt Flow can be configured visually, though it’s more effort. SDK (C) requires code; catalog compares models, not prompt variants (D)."
   },
   {
     "tag": "f",
@@ -1620,15 +1757,15 @@
     "text": "Vector search returns no results after uploading updated docs. Identify the likely issue.",
     "code": "# Indexer scheduled PT2H\n# Docs updated 10 minutes ago\n# Query returns empty context\n",
     "options": [
-      "Vector indexes cannot update incrementally",
       "Wait for the next scheduled indexer run or trigger a run manually",
+      "Vector indexes cannot update incrementally",
       "Clear embedding cache in the model",
       "Switch to semantic ranker"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Scheduled indexer hasn’t ingested changes yet; trigger or wait."
+    "expl": "Correct answer: A — Scheduled indexer hasn’t ingested changes yet; trigger or wait."
   },
   {
     "tag": "c",
@@ -1638,15 +1775,15 @@
     "scenlabel": null,
     "text": "You need to redact PII before passing documents to the LLM. Which approach balances accuracy and cost?",
     "options": [
-      "Use AI Language PII detection as a preprocessing step, then send redacted text to the LLM",
       "Always send raw text; rely on content filters",
+      "Use AI Language PII detection as a preprocessing step, then send redacted text to the LLM",
       "Fine-tune the LLM to ignore PII",
       "Manually curate all data"
     ],
     "answer": [
-      0
+      1
     ],
-    "expl": "Correct answer: A — Dedicated PII detection/redaction upstream reduces risk and LLM processing costs on sensitive spans."
+    "expl": "Correct answer: B — Dedicated PII detection/redaction upstream reduces risk and LLM processing costs on sensitive spans."
   },
   {
     "tag": "s",
@@ -1657,14 +1794,14 @@
     "text": "Where should token acquisition occur?",
     "options": [
       "In the system prompt with the token pasted",
-      "Inside the function tool implementation before the API call",
+      "In the agent instruction metadata",
       "In each user message",
-      "In the agent instruction metadata"
+      "Inside the function tool implementation before the API call"
     ],
     "answer": [
-      1
+      3
     ],
-    "expl": "Correct answer: B — Authentication belongs in the tool function implementation."
+    "expl": "Correct answer: D — Authentication belongs in the tool function implementation."
   },
   {
     "tag": "f",
@@ -1675,9 +1812,9 @@
     "text": "Which TWO reduce repeated identical tool calls across turns?",
     "options": [
       "Cache tool outputs keyed by normalized arguments",
-      "Set max_completion_tokens to 1",
+      "Increase top_p to 1",
       "Add tool-result memory into the thread and reference prior result",
-      "Increase top_p to 1"
+      "Set max_completion_tokens to 1"
     ],
     "answer": [
       0,
@@ -1695,15 +1832,15 @@
     "text": "Supply the correct class for multimodal image input with azure-ai-inference.",
     "code": "from azure.ai.inference.models import UserMessage, TextContentItem, _____, ImageUrl\nmsg = UserMessage(content=[\n  ImageContentItem(image_url=ImageUrl(url=\"data:image/png;base64,...\")),\n  TextContentItem(text=\"Describe the image\")\n])",
     "options": [
-      "ImageContentItem",
       "ImagePart",
+      "ImageContentItem",
       "VisionImage",
       "PictureContent"
     ],
     "answer": [
-      0
+      1
     ],
-    "expl": "Correct answer: A — ImageContentItem is the SDK’s class for image inputs."
+    "expl": "Correct answer: B — ImageContentItem is the SDK’s class for image inputs."
   },
   {
     "tag": "r",
@@ -1760,15 +1897,15 @@
     "text": "A file was uploaded and added to a vector store, but retrieval returns nothing. Identify the problem.",
     "code": "file = client.agents.upload_file_and_poll(file_path=\"hr.pdf\", purpose=\"assistants\")\nvs = client.agents.create_vector_store_and_poll(file_ids=[file.id], name=\"hr\")\nagent = client.agents.create_agent(\n  model=\"gpt-4o\",\n  tools=[{\"type\":\"file_search\"}],\n  tool_resources={\"file_search\": {\"vector_store_ids\":[file.id]}}\n)",
     "options": [
-      "purpose must be \"retrieval\"",
       "vector_store_ids must reference vs.id, not file.id",
+      "purpose must be \"retrieval\"",
       "tools should be file-retrieval",
       "model must be gpt-4.1"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — The tool should reference the vector store ID."
+    "expl": "Correct answer: A — The tool should reference the vector store ID."
   },
   {
     "tag": "f",
@@ -1778,15 +1915,15 @@
     "scenlabel": null,
     "text": "Which endpoint base URL is correct for azure-ai-inference with a Foundry project?",
     "options": [
-      "https://{resource}.openai.azure.com/",
       "https://{project}.services.ai.azure.com/models",
+      "https://{resource}.openai.azure.com/",
       "https://api.cognitive.microsoft.com/openai/",
       "https://{hub}.azureml.net/endpoints/"
     ],
     "answer": [
-      1
+      0
     ],
-    "expl": "Correct answer: B — Use the project inference endpoint."
+    "expl": "Correct answer: A — Use the project inference endpoint."
   },
   {
     "tag": "s",
@@ -1796,15 +1933,15 @@
     "scenlabel": "Scenario — Looping Agent",
     "text": "What configuration stops runaway loops?",
     "options": [
-      "max_steps (or max_iterations) and explicit instruction to avoid repeating tool calls",
+      "Increase context window",
       "temperature=0",
       "top_p=0",
-      "Increase context window"
+      "max_steps (or max_iterations) and explicit instruction to avoid repeating tool calls"
     ],
     "answer": [
-      0
+      3
     ],
-    "expl": "Correct answer: A — Hard iteration limits plus prompt guidance break loops."
+    "expl": "Correct answer: D — Hard iteration limits plus prompt guidance break loops."
   },
   {
     "tag": "c",
@@ -1815,14 +1952,14 @@
     "text": "A marketing image-processing pipeline flags too many false positives for 'adult' content in swimwear photos. What’s the first step?",
     "options": [
       "Relax all filters",
-      "Run safety evaluation on a labeled dataset representative of true content",
+      "Switch to a larger model",
       "Disable the adult category",
-      "Switch to a larger model"
+      "Run safety evaluation on a labeled dataset representative of true content"
     ],
     "answer": [
-      1
+      3
     ],
-    "expl": "Correct answer: B — Measure with a representative dataset to understand error characteristics before tuning."
+    "expl": "Correct answer: D — Measure with a representative dataset to understand error characteristics before tuning."
   },
   {
     "tag": "f",
@@ -1834,14 +1971,14 @@
     "text": "Wire Prompt Flow nodes correctly: pass vector_search results into llm node input 'context'. Fill the Jinja mapping.",
     "code": "outputs:\n  answer:\n    type: string\nnodes:\n- name: vector_search\n  ...\n- name: llm\n  inputs:\n    context: \"{{ _____ }}\"",
     "options": [
-      "vector_search.output",
-      "vector_search.outputs",
       "vector_search.output_documents",
+      "vector_search.outputs",
+      "vector_search.output",
       "vector_search"
     ],
     "answer": [
-      2
+      0
     ],
-    "expl": "Correct answer: C — Map the llm 'context' to vector_search.output_documents (or equivalent output key)."
+    "expl": "Correct answer: A — Map the llm 'context' to vector_search.output_documents (or equivalent output key)."
   }
 ]
