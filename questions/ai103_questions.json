@@ -140,7 +140,7 @@
     "text": "A developer is building a multi-agent solution where a coordinator agent must invoke a specialist summarisation agent. The specialist agent is already deployed in Azure AI Foundry. Which pattern correctly implements agent-to-agent invocation?",
     "options": [
       "Deploy both agents behind Azure API Management and use APIM policies to route between them based on query content",
-      "Configure both agents to share the same conversation thread — the specialist agent reads coordinator messages and responds automatically",
+      "Configure both agents to share the same conversation thread — the specialist agent reads coordinator messages and responds automatically. This option outlines a possible implementation detail for the AI solution.",
       "Use Azure Service Bus to publish coordinator outputs as messages — the specialist agent subscribes and processes them",
       "Register the specialist agent's run API as a function tool on the coordinator — when the coordinator emits a tool_call, the application executes a run on the specialist agent and returns its response"
     ],
@@ -514,7 +514,7 @@
     "options": [
       "The run status changes to 'paused' — the application polls get_run() and checks for status=='paused'",
       "The run status changes to 'requires_action' with action type 'submit_tool_outputs' — the application polls get_run() and handles the pending approval",
-      "The run emits a webhook notification to the application's callback URL — no polling is required",
+      "The run emits a webhook notification to the application's callback URL — no polling is required. This option outlines a possible implementation detail for the AI solution.",
       "The run status changes to 'waiting' — the application checks run.waiting_for in the response object"
     ],
     "answer": [
@@ -703,7 +703,7 @@
     "scen": null,
     "text": "A developer needs to delete an Azure AI Foundry agent and all its associated threads and files when a customer account is deactivated. Which sequence of SDK calls achieves complete cleanup?",
     "options": [
-      "client.agents.delete_agent(agent_id) — this cascade-deletes all threads, messages, and files associated with the agent",
+      "client.agents.delete_agent(agent_id) — this cascade-deletes all threads, messages, and files associated with the agent. This option outlines a possible implementation detail for the AI solution.",
       "Delete each thread using client.agents.delete_thread(thread_id), delete each file using client.agents.delete_file(file_id), then delete the agent using client.agents.delete_agent(agent_id)",
       "client.projects.delete_resources(agent_id) — Foundry project resource deletion handles all associated assets",
       "Delete the Foundry project — all agents, threads, and files are deleted as part of project deletion"
@@ -757,9 +757,9 @@
     "text": "A Foundry agent is being tested and the team notices that in some conversations the agent repeats the same tool call multiple times in a loop without making progress. This is known as a tool call loop. Which configuration prevents this?",
     "options": [
       "Set temperature=0 — deterministic responses prevent the agent from making different tool call decisions each turn",
-      "Configure max_completion_tokens on the model deployment to limit the agent's response length",
+      "Configure max_completion_tokens on the model deployment to limit the agent's response length. This choice reflects one way to configure the solution in Azure.",
       "Set the run's max_iterations or max_steps parameter to limit the number of tool calls per run, combined with clear system prompt instructions to avoid repetition",
-      "Remove all tool definitions and use chain-of-thought prompting to simulate tool calls internally"
+      "Remove all tool definitions and use chain-of-thought prompting to simulate tool calls internally. It describes a common pattern that might be considered in this scenario."
     ],
     "answer": [
       2
@@ -845,7 +845,7 @@
     "text": "An organisation's AI agent generates customer-facing content. During evaluation, they find the agent produces inconsistent responses — giving different answers to the same question depending on minor phrasing variations. Which Responsible AI principle is most directly violated and what is the recommended mitigation?",
     "options": [
       "Reliability and Safety — inconsistency is a reliability failure; reduce temperature, add system prompt consistency instructions, and test extensively across input variations",
-      "Fairness — inconsistent answers may disadvantage certain customer groups; add demographic fairness testing",
+      "Fairness — inconsistent answers may disadvantage certain customer groups; add demographic fairness testing. The wording highlights a particular aspect of how the system could be set up.",
       "Transparency — customers cannot understand why they receive different answers; add an explanation UI",
       "Inclusiveness — inconsistency disproportionately affects users who phrase questions differently; expand training data diversity"
     ],
@@ -985,10 +985,10 @@
     "scen": null,
     "text": "A developer needs to implement conversation memory that summarises older messages to stay within the model's context window as conversations grow long. Which pattern implements this correctly in a Foundry agent?",
     "options": [
-      "Configure the agent's max_prompt_tokens parameter — the agent automatically summarises older messages when the limit is reached",
+      "Configure the agent's max_prompt_tokens parameter — the agent automatically summarises older messages when the limit is reached. This choice reflects one way to configure the solution in Azure.",
       "Use Azure AI Search to store all messages and retrieve only the most recent 5 using a timestamp filter",
       "Implement a summarisation step in the application layer: when message count exceeds a threshold, call the LLM to summarise older messages, replace them with the summary, and continue the thread",
-      "Increase the model deployment's max_tokens to 128K — a larger context window eliminates the need for summarisation"
+      "Increase the model deployment's max_tokens to 128K — a larger context window eliminates the need for summarisation. This option outlines a possible implementation detail for the AI solution."
     ],
     "answer": [
       2
@@ -1090,7 +1090,7 @@
       "Increase temperature to diversify outputs",
       "Use a system prompt with strict tool-use and refusal rules plus content filters",
       "Add user analytics to detect outliers",
-      "Switch to a larger context window model"
+      "Switch to a larger context window model. This choice reflects one way to configure the solution in Azure."
     ],
     "answer": [
       1
@@ -1226,9 +1226,9 @@
     "text": "An agent repeatedly calls a tool that returned an error, causing long latency. What is the most effective immediate mitigation?",
     "options": [
       "Set max_steps for the run and implement exponential backoff with capped retries in the tool",
-      "Lower temperature to 0",
+      "Lower temperature to 0. The wording highlights a particular aspect of how the system could be set up.",
       "Increase max_tokens",
-      "Scale up the compute SKU"
+      "Scale up the compute SKU. It focuses on how the components interact within the overall architecture."
     ],
     "answer": [
       0
@@ -1272,8 +1272,8 @@
     "options": [
       "Separate Foundry projects per tenant under the same hub; per-tenant search indexes and deployments",
       "One shared project and shared index with tenantId field filter",
-      "Separate subscriptions per tenant",
-      "Single global index and agent; tenant isolation handled in prompts"
+      "Separate subscriptions per tenant. It focuses on how the components interact within the overall architecture.",
+      "Single global index and agent; tenant isolation handled in prompts. It describes a common pattern that might be considered in this scenario."
     ],
     "answer": [
       0
@@ -1327,8 +1327,8 @@
     "scenlabel": null,
     "text": "Which evaluation dataset format is typically used with the Azure AI Evaluation SDK for batch scoring?",
     "options": [
-      "CSV with columns q,a,ctx",
-      "Parquet with nested maps",
+      "CSV with columns q,a,ctx. This option outlines a possible implementation detail for the AI solution.",
+      "Parquet with nested maps. The wording highlights a particular aspect of how the system could be set up.",
       "YAML with question/answer nodes",
       "JSON Lines (JSONL) with fields like query, response, context"
     ],
@@ -1366,8 +1366,8 @@
     "text": "What is the correct compliance step before go-live?",
     "options": [
       "Complete a conformity assessment and implement human oversight prior to deployment",
-      "Post-deployment conformity check within 12 months",
-      "Publish your model weights",
+      "Post-deployment conformity check within 12 months. The wording highlights a particular aspect of how the system could be set up.",
+      "Publish your model weights. This choice reflects one way to configure the solution in Azure.",
       "Encrypt logs and skip human review"
     ],
     "answer": [
@@ -1449,10 +1449,10 @@
     "scenlabel": null,
     "text": "Content Understanding must populate defect_description only when defects=true. What is the simplest approach?",
     "options": [
-      "Define if-then schema rules",
+      "Define if-then schema rules. It describes a common pattern that might be considered in this scenario.",
       "Make defect_description optional and leave null when not applicable",
       "Always require defect_description and fill 'N/A'",
-      "Post-process with a Prompt Flow step"
+      "Post-process with a Prompt Flow step. It focuses on how the components interact within the overall architecture."
     ],
     "answer": [
       1
@@ -1470,7 +1470,7 @@
       "LLM token usage metrics",
       "Console logs in the application",
       "OpenTelemetry spans from Foundry Tracing exported to Log Analytics",
-      "Azure Cost Management invoices"
+      "Azure Cost Management invoices. The wording highlights a particular aspect of how the system could be set up."
     ],
     "answer": [
       2
@@ -1534,7 +1534,7 @@
     "options": [
       "Hide model names to reduce confusion",
       "Randomise responses for variety",
-      "Disable logs for privacy",
+      "Disable logs for privacy. The wording highlights a particular aspect of how the system could be set up.",
       "Display AI usage notices and expose an explanation view of retrieved sources and tool calls"
     ],
     "answer": [
@@ -1590,8 +1590,8 @@
     "text": "You must prevent PII from leaving your network during evaluation runs. What should you configure?",
     "options": [
       "Evaluation SDK with azure_ai_project set and private endpoints on all services",
-      "Evaluation SDK only; networking is unrelated",
-      "Prompt Flow offline mode",
+      "Evaluation SDK only; networking is unrelated. This option outlines a possible implementation detail for the AI solution.",
+      "Prompt Flow offline mode. The wording highlights a particular aspect of how the system could be set up.",
       "Set temperature to 0"
     ],
     "answer": [
@@ -1608,8 +1608,8 @@
     "text": "How should you configure the agent?",
     "options": [
       "Attach file_ids to the agent’s code_interpreter tool_resources at creation",
-      "Upload files each session in the first user message",
-      "Place files in Blob and paste SAS URLs into prompts",
+      "Upload files each session in the first user message. It focuses on how the components interact within the overall architecture.",
+      "Place files in Blob and paste SAS URLs into prompts. This option outlines a possible implementation detail for the AI solution.",
       "Use the run.attach_files() API for each turn"
     ],
     "answer": [
@@ -1691,10 +1691,10 @@
     "scenlabel": null,
     "text": "Your agent should not auto-update to new base model versions. What should you configure on deployment?",
     "options": [
-      "Lock the hub",
+      "Lock the hub. This option outlines a possible implementation detail for the AI solution.",
       "Disable tracing",
       "Use a fixed model version identifier instead of 'latest'",
-      "Set temperature=0"
+      "Set temperature=0. This choice reflects one way to configure the solution in Azure."
     ],
     "answer": [
       2
@@ -1778,7 +1778,7 @@
       "Always send raw text; rely on content filters",
       "Use AI Language PII detection as a preprocessing step, then send redacted text to the LLM",
       "Fine-tune the LLM to ignore PII",
-      "Manually curate all data"
+      "Manually curate all data. It focuses on how the components interact within the overall architecture."
     ],
     "answer": [
       1
@@ -1794,8 +1794,8 @@
     "text": "Where should token acquisition occur?",
     "options": [
       "In the system prompt with the token pasted",
-      "In the agent instruction metadata",
-      "In each user message",
+      "In the agent instruction metadata. It describes a common pattern that might be considered in this scenario.",
+      "In each user message. This option outlines a possible implementation detail for the AI solution.",
       "Inside the function tool implementation before the API call"
     ],
     "answer": [
@@ -1852,7 +1852,7 @@
     "options": [
       "Fairness — collect demographic labels",
       "Reliability — reduce temperature, add consistency instructions and tests",
-      "Transparency — show a spinner",
+      "Transparency — show a spinner. This option outlines a possible implementation detail for the AI solution.",
       "Security — enable private endpoints"
     ],
     "answer": [
@@ -1933,9 +1933,9 @@
     "scenlabel": "Scenario — Looping Agent",
     "text": "What configuration stops runaway loops?",
     "options": [
-      "Increase context window",
+      "Increase context window. The wording highlights a particular aspect of how the system could be set up.",
       "temperature=0",
-      "top_p=0",
+      "top_p=0. The wording highlights a particular aspect of how the system could be set up.",
       "max_steps (or max_iterations) and explicit instruction to avoid repeating tool calls"
     ],
     "answer": [
@@ -1952,7 +1952,7 @@
     "text": "A marketing image-processing pipeline flags too many false positives for 'adult' content in swimwear photos. What’s the first step?",
     "options": [
       "Relax all filters",
-      "Switch to a larger model",
+      "Switch to a larger model. The wording highlights a particular aspect of how the system could be set up.",
       "Disable the adult category",
       "Run safety evaluation on a labeled dataset representative of true content"
     ],
