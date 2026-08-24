@@ -50,7 +50,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: C — create_message().\n\nThe azure-ai-projects SDK uses client.agents.create_message() to add a message to a thread. It accepts thread_id, role (\"user\" or \"assistant\"), and content. add_message(), send_message(), and post_message() are not valid method names and will raise AttributeError."
+    "expl": "Correct answer: B — create_message().\n\nThe azure-ai-projects SDK uses client.agents.create_message() to add a message to a thread. It accepts thread_id, role (\"user\" or \"assistant\"), and content. add_message(), send_message(), and post_message() are not valid method names and will raise AttributeError."
   },
   {
     "tag": "f",
@@ -69,7 +69,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: C — for msg in messages.items:\n\nThe list_messages() call returns a MessageList object where messages are stored in the .data attribute — not .items. Iterating over .items raises AttributeError because that attribute does not exist on MessageList. The correct pattern is: for msg in messages.data. The run creation, list_messages call, and content access are all correct."
+    "expl": "Correct answer: B — for msg in messages.items:\n\nThe list_messages() call returns a MessageList object where messages are stored in the .data attribute — not .items. Iterating over .items raises AttributeError because that attribute does not exist on MessageList. The correct pattern is: for msg in messages.data. The run creation, list_messages call, and content access are all correct."
   },
   {
     "tag": "f",
@@ -166,7 +166,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: A — create_run_stream().\n\nThe azure-ai-projects SDK provides create_run_stream() as a context manager that yields streaming events during agent execution. It is the correct method for progressive token rendering. stream_run(), create_streaming_run(), and run_stream() are not valid SDK method names."
+    "expl": "Correct answer: D — create_run_stream().\n\nThe azure-ai-projects SDK provides create_run_stream() as a context manager that yields streaming events during agent execution. It is the correct method for progressive token rendering. stream_run(), create_streaming_run(), and run_stream() are not valid SDK method names."
   },
   {
     "tag": "c",
@@ -218,7 +218,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: B and C\n\nDefence-in-depth for safety requires: (1) content filters on the Azure OpenAI deployment (B) — these operate at infrastructure level and block harmful categories on every response automatically, and (2) pre-production safety evaluation using the Evaluation SDK (C) — this measures the probability and severity of harmful outputs before going live. A system prompt instruction (D) alone is not a reliable safety control — it can be bypassed. Rate limiting (A) is a performance/cost control, not a safety mechanism."
+    "expl": "Correct answers: B and C — these operate at infrastructure level and block harmful categories on every response automatically, and (2) pre-production safety evaluation using the Evaluation SDK (C) — this measures the probability and severity of harmful outputs before going live. A system prompt instruction (D) alone is not a reliable safety control — it can be bypassed. Rate limiting (A) is a performance/cost control, not a safety mechanism."
   },
   {
     "tag": "s",
@@ -297,7 +297,7 @@
       0,
       1
     ],
-    "expl": "Correct answers: A and B\n\nPrivate Endpoints (A) create private IP addresses for Azure AI services inside the company's network, disabling public access. VNet integration (B) routes application traffic to AI services through private network paths. Together they ensure end-to-end private connectivity. API Management (D) proxies HTTP traffic but does not inherently keep it private — it would also need private endpoint configuration. Encryption at rest (C) protects stored data — it does not control network routing or prevent data from traversing the public internet."
+    "expl": "Correct answers: A and B — it would also need private endpoint configuration. Encryption at rest (C) protects stored data — it does not control network routing or prevent data from traversing the public internet."
   },
   {
     "tag": "f",
@@ -350,7 +350,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — {get_shipment_status}.\n\nFunctionTool expects a Python set of function references — not a list, tuple, or single function. Using {get_shipment_status} (a set containing the function) is the correct syntax. A list [get_shipment_status] and a tuple (get_shipment_status,) are not valid — the SDK specifically expects a set. Passing the function directly without a container raises a TypeError."
+    "expl": "Correct answer: C — {get_shipment_status}.\n\nFunctionTool expects a Python set of function references — not a list, tuple, or single function. Using {get_shipment_status} (a set containing the function) is the correct syntax. A list [get_shipment_status] and a tuple (get_shipment_status,) are not valid — the SDK specifically expects a set. Passing the function directly without a container raises a TypeError."
   },
   {
     "tag": "f",
@@ -432,7 +432,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: C — tool_outputs=results[0].\n\nresults[0] submits only the first tool result to the run. The tool_outputs parameter must receive the complete list of all tool results — tool_outputs=results. The agent requires all pending tool outputs to be submitted in a single call before it can continue reasoning. Submitting only the first one leaves the second tool call unresolved and the agent cannot proceed past the tool call step."
+    "expl": "Correct answer: D — tool_outputs=results[0].\n\nresults[0] submits only the first tool result to the run. The tool_outputs parameter must receive the complete list of all tool results — tool_outputs=results. The agent requires all pending tool outputs to be submitted in a single call before it can continue reasoning. Submitting only the first one leaves the second tool call unresolved and the agent cannot proceed past the tool call step."
   },
   {
     "tag": "r",
@@ -484,7 +484,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: B and C\n\nThe evaluate() function accepts multiple evaluators in a single call via the evaluators dict — e.g. evaluators={'groundedness': g_eval, 'relevance': r_eval, 'coherence': c_eval}. All evaluators run against the same dataset in one call (B). The JSONL dataset must include query, response, and context fields (C) — groundedness requires context to measure whether the response is supported by retrieved content (D is false — groundedness specifically needs context, not just the response)."
+    "expl": "Correct answers: B and C — e.g. evaluators={'groundedness': g_eval, 'relevance': r_eval, 'coherence': c_eval}. All evaluators run against the same dataset in one call (B). The JSONL dataset must include query, response, and context fields (C) — groundedness requires context to measure whether the response is supported by retrieved content (D is false — groundedness specifically needs context, not just the response)."
   },
   {
     "tag": "f",
@@ -503,7 +503,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — azure_ai_project.\n\nThe safety evaluator constructors in the azure-ai-evaluation SDK use the parameter name azure_ai_project to receive the project connection details dict (subscription_id, resource_group_name, project_name). project, foundry_project, and ai_project are not valid parameter names and will raise a TypeError."
+    "expl": "Correct answer: C — azure_ai_project.\n\nThe safety evaluator constructors in the azure-ai-evaluation SDK use the parameter name azure_ai_project to receive the project connection details dict (subscription_id, resource_group_name, project_name). project, foundry_project, and ai_project are not valid parameter names and will raise a TypeError."
   },
   {
     "tag": "f",
@@ -581,7 +581,7 @@
       2,
       3
     ],
-    "expl": "Correct answers: C and D\n\nThe issue is a Fairness violation — differential error rates across demographic/community groups. The correct actions are: (1) measure the disparity systematically using a stratified evaluation dataset and the HateUnfairnessEvaluator (C), and (2) audit and address representation imbalance in the data (D) — skewed training or evaluation data is a common root cause of differential performance. Raising the threshold (A) reduces overall volume but does not address the relative disparity — the 3x ratio may persist. Separate models per community (B) avoids the problem rather than solving it and creates maintenance overhead."
+    "expl": "Correct answers: C and D — differential error rates across demographic/community groups. The correct actions are: (1) measure the disparity systematically using a stratified evaluation dataset and the HateUnfairnessEvaluator (C), and (2) audit and address representation imbalance in the data (D) — skewed training or evaluation data is a common root cause of differential performance. Raising the threshold (A) reduces overall volume but does not address the relative disparity — the 3x ratio may persist. Separate models per community (B) avoids the problem rather than solving it and creates maintenance overhead."
   },
   {
     "tag": "f",
@@ -600,7 +600,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: A — tools=[{\"type\": \"azure_ai_search\"}].\n\nThe tool type string for the Azure AI Search retrieval tool in the Foundry agents API is \"file_search\" or the Foundry-specific retrieval tool type — not \"azure_ai_search\". Using an unrecognised tool type string means the tool is not registered correctly, so the agent has no retrieval capability despite tool_resources being configured. The tool_resources, instructions, and tool_choice are all correctly set. The fix is to use the correct tool type string as specified in the current Foundry agents API documentation."
+    "expl": "Correct answer: C — tools=[{\"type\": \"azure_ai_search\"}].\n\nThe tool type string for the Azure AI Search retrieval tool in the Foundry agents API is \"file_search\" or the Foundry-specific retrieval tool type — not \"azure_ai_search\". Using an unrecognised tool type string means the tool is not registered correctly, so the agent has no retrieval capability despite tool_resources being configured. The tool_resources, instructions, and tool_choice are all correctly set. The fix is to use the correct tool type string as specified in the current Foundry agents API documentation."
   },
   {
     "tag": "f",
@@ -747,7 +747,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — generate().\n\nThe EmbeddingsClient in the azure-ai-inference SDK uses the generate() method to create embeddings. It accepts an input list of strings and a model name (deployment name). The response.data[0].embedding returns the vector as a list of floats. embed(), encode(), and get_embeddings() are not valid method names on EmbeddingsClient."
+    "expl": "Correct answer: C — generate().\n\nThe EmbeddingsClient in the azure-ai-inference SDK uses the generate() method to create embeddings. It accepts an input list of strings and a model name (deployment name). The response.data[0].embedding returns the vector as a list of floats. embed(), encode(), and get_embeddings() are not valid method names on EmbeddingsClient."
   },
   {
     "tag": "f",
@@ -782,7 +782,7 @@
       0,
       2
     ],
-    "expl": "Correct answers: A and C.\n\nContent Understanding (A) natively supports multi-format document processing including PDFs with images, Excel, and PowerPoint — it generates structured output suitable for chunking and embedding in a RAG pipeline. Azure AI Search with a cognitive skillset (C) provides built-in extractors for Office formats and OCR for PDF images — all normalised to searchable text fields in the index. Document Intelligence read model (B) handles PDFs and images but does not support Excel or PowerPoint. A custom Azure Function (D) works but requires maintaining parsing libraries and adds development overhead when managed services provide the capability."
+    "expl": "Correct answers: A and C — it generates structured output suitable for chunking and embedding in a RAG pipeline. Azure AI Search with a cognitive skillset (C) provides built-in extractors for Office formats and OCR for PDF images — all normalised to searchable text fields in the index. Document Intelligence read model (B) handles PDFs and images but does not support Excel or PowerPoint. A custom Azure Function (D) works but requires maintaining parsing libraries and adds development overhead when managed services provide the capability."
   },
   {
     "tag": "f",
@@ -888,7 +888,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: A — ImageContentItem.\n\nIn the azure-ai-inference SDK, multimodal user message content arrays use ImageContentItem for image inputs and TextContentItem for text inputs. ImageContentItem accepts an image_url parameter of type ImageUrl which holds the URL or base64 data URI. ImageMessage, VisionContentItem, and Base64ContentItem are not valid class names in this SDK."
+    "expl": "Correct answer: C — ImageContentItem.\n\nIn the azure-ai-inference SDK, multimodal user message content arrays use ImageContentItem for image inputs and TextContentItem for text inputs. ImageContentItem accepts an image_url parameter of type ImageUrl which holds the URL or base64 data URI. ImageMessage, VisionContentItem, and Base64ContentItem are not valid class names in this SDK."
   },
   {
     "tag": "f",
@@ -906,7 +906,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: B and C\n\nFor agentic RAG solutions, the two most AI-specific red-teaming scenarios are: (1) Prompt injection via retrieved documents (B) — malicious content embedded in indexed source documents (e.g. hidden instructions like 'ignore previous instructions and...') that the retrieval tool surfaces and the model acts on, and (2) context window stuffing (C) — submitting extremely long inputs to consume the context window, potentially crowding out retrieved context or causing unexpected model behaviour. SQL injection (A) applies only if the agent generates SQL queries from user input. XSS (D) is a web application vulnerability unrelated to LLM agent behaviour."
+    "expl": "Correct answers: B and C — malicious content embedded in indexed source documents (e.g. hidden instructions like 'ignore previous instructions and...') that the retrieval tool surfaces and the model acts on, and (2) context window stuffing (C) — submitting extremely long inputs to consume the context window, potentially crowding out retrieved context or causing unexpected model behaviour. SQL injection (A) applies only if the agent generates SQL queries from user input. XSS (D) is a web application vulnerability unrelated to LLM agent behaviour."
   },
   {
     "tag": "f",
@@ -959,7 +959,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: B — JSONL file missing the 'context' field.\n\nGroundednessEvaluator requires each JSONL record to contain 'query', 'response', and 'context' fields. If 'context' is absent, the evaluator cannot measure whether the response is grounded in retrieved content — it either skips those records or returns null scores, resulting in an empty or incomplete results dict. The evaluators dict, output_path, and credential are all correctly configured. Always verify the JSONL schema matches each evaluator's required input columns."
+    "expl": "Correct answer: A — JSONL file missing the 'context' field.\n\nGroundednessEvaluator requires each JSONL record to contain 'query', 'response', and 'context' fields. If 'context' is absent, the evaluator cannot measure whether the response is grounded in retrieved content — it either skips those records or returns null scores, resulting in an empty or incomplete results dict. The evaluators dict, output_path, and credential are all correctly configured. Always verify the JSONL schema matches each evaluator's required input columns."
   },
   {
     "tag": "f",
@@ -1176,7 +1176,7 @@
       1,
       3
     ],
-    "expl": "Correct answers: B and D— Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (C) may increase cold-start latency. Batching unrelated user inputs (A) breaks isolation and traceability."
+    "expl": "Correct answers: B and D — Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (C) may increase cold-start latency. Batching unrelated user inputs (A) breaks isolation and traceability."
   },
   {
     "tag": "r",
@@ -1419,7 +1419,7 @@
       0,
       3
     ],
-    "expl": "Correct answers: A and D— Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
+    "expl": "Correct answers: A and D — Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
   },
   {
     "tag": "f",
