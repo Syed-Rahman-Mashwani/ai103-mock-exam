@@ -87,7 +87,7 @@
       0,
       3
     ],
-    "expl": "Correct answers: A and C.\n\nPre-loading files for the code interpreter requires: (1) uploading each file using upload_file_and_poll() which returns a persistent file_id, and (2) attaching those file_ids to the agent at creation in tool_resources: {\"code_interpreter\": {\"file_ids\": [file_id_1, file_id_2]}}. SAS URLs in messages (B) require re-downloading each turn. Data assets (D) are not automatically accessible to the code interpreter without explicit file attachment."
+    "expl": "Correct answers: A and D\n\nPre-loading files for the code interpreter requires: (1) uploading each file using upload_file_and_poll() which returns a persistent file_id, and (2) attaching those file_ids to the agent at creation in tool_resources: {\"code_interpreter\": {\"file_ids\": [file_id_1, file_id_2]}}. SAS URLs in messages (B) require re-downloading each turn. Data assets (C) are not automatically accessible to the code interpreter without explicit file attachment."
   },
   {
     "tag": "f",
@@ -130,7 +130,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: B — Before placing the system on the market or putting it into service.\n\nThe EU AI Act requires that high-risk AI systems (which include automated loan/credit decisions) must complete a conformity assessment before deployment — not after go-live. Conformity assessment is proactive, not reactive. The biometric exemption claim is false — loan and credit scoring systems are explicitly listed as high-risk in Annex III of the EU AI Act."
+    "expl": "Correct answer: A — Before placing the system on the market or putting it into service.\n\nThe EU AI Act requires that high-risk AI systems (which include automated loan/credit decisions) must complete a conformity assessment before deployment — not after go-live. Conformity assessment is proactive, not reactive. The biometric exemption claim is false — loan and credit scoring systems are explicitly listed as high-risk in Annex III of the EU AI Act."
   },
   {
     "tag": "f",
@@ -147,7 +147,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: A — Register specialist agent as a function tool on the coordinator.\n\nThe correct AI-103 multi-agent pattern is to wrap the specialist agent's invocation (create_thread, create_message, create_and_process_run, retrieve response) as a Python function and register it as a function tool on the coordinator. When the coordinator decides to delegate, it emits a tool_call, the application executes the specialist agent run, and returns the response to the coordinator thread. Shared threads cause agents to interfere with each other's reasoning. Service Bus and APIM add infrastructure complexity without Foundry-native integration."
+    "expl": "Correct answer: D — Register specialist agent as a function tool on the coordinator.\n\nThe correct AI-103 multi-agent pattern is to wrap the specialist agent's invocation (create_thread, create_message, create_and_process_run, retrieve response) as a Python function and register it as a function tool on the coordinator. When the coordinator decides to delegate, it emits a tool_call, the application executes the specialist agent run, and returns the response to the coordinator thread. Shared threads cause agents to interfere with each other's reasoning. Service Bus and APIM add infrastructure complexity without Foundry-native integration."
   },
   {
     "tag": "f",
@@ -183,7 +183,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: A — Content Understanding audio analyzer with custom output schema.\n\nContent Understanding in Azure AI Foundry supports audio as an input modality and allows you to define a custom output schema (JSON) specifying the exact fields you want extracted — including speaker_label, timestamps, and transcript per segment. It returns typed, structured JSON directly. Speech batch transcription (B) returns raw VTT/JSON that requires custom parsing. Document Intelligence (C) does not support audio inputs. Prompt Flow (D) achieves the result but requires two services and custom orchestration when Content Understanding handles it natively."
+    "expl": "Correct answer: B — Content Understanding audio analyzer with custom output schema.\n\nContent Understanding in Azure AI Foundry supports audio as an input modality and allows you to define a custom output schema (JSON) specifying the exact fields you want extracted — including speaker_label, timestamps, and transcript per segment. It returns typed, structured JSON directly. Speech batch transcription (A) returns raw VTT/JSON that requires custom parsing. Document Intelligence (C) does not support audio inputs. Prompt Flow (D) achieves the result but requires two services and custom orchestration when Content Understanding handles it natively."
   },
   {
     "tag": "f",
@@ -200,7 +200,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — Wait for the next scheduled run or trigger manually.\n\nAzure AI Search indexers poll for changes on their configured schedule. With PT30M scheduling, updates can take up to 30 minutes to appear. If immediate consistency is needed, the indexer can be triggered via the Run API or the Azure portal. Vector indexes support incremental updates — full rebuilds are not required. There is no embedding cache to clear. Event Grid is optional for faster triggering but not required for basic change detection with Blob Storage indexers."
+    "expl": "Correct answer: D — Wait for the next scheduled run or trigger manually.\n\nAzure AI Search indexers poll for changes on their configured schedule. With PT30M scheduling, updates can take up to 30 minutes to appear. If immediate consistency is needed, the indexer can be triggered via the Run API or the Azure portal. Vector indexes support incremental updates — full rebuilds are not required. There is no embedding cache to clear. Event Grid is optional for faster triggering but not required for basic change detection with Blob Storage indexers."
   },
   {
     "tag": "f",
@@ -218,7 +218,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: A and C.\n\nDefence-in-depth for safety requires: (1) content filters on the Azure OpenAI deployment (A) — these operate at infrastructure level and block harmful categories on every response automatically, and (2) pre-production safety evaluation using the Evaluation SDK (C) — this measures the probability and severity of harmful outputs before going live. A system prompt instruction (B) alone is not a reliable safety control — it can be bypassed. Rate limiting (D) is a performance/cost control, not a safety mechanism."
+    "expl": "Correct answers: B and C\n\nDefence-in-depth for safety requires: (1) content filters on the Azure OpenAI deployment (B) — these operate at infrastructure level and block harmful categories on every response automatically, and (2) pre-production safety evaluation using the Evaluation SDK (C) — this measures the probability and severity of harmful outputs before going live. A system prompt instruction (D) alone is not a reliable safety control — it can be bypassed. Rate limiting (A) is a performance/cost control, not a safety mechanism."
   },
   {
     "tag": "s",
@@ -236,7 +236,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: B — Custom Document Intelligence models composed.\n\nWith 6 distinct templates, no prebuilt coverage, and 40 labeled samples per template (exceeding the minimum 5), custom extraction models trained per template and composed under a single endpoint is the correct approach. The prebuilt invoice model (A) is for invoice-specific fields — it cannot be configured for arbitrary field names without training. Content Understanding (C) is powerful for unstructured content but less precise for fixed-field extraction across known templates. GPT-4o (D) is non-deterministic and expensive at logistics scale."
+    "expl": "Correct answer: A — Custom Document Intelligence models composed.\n\nWith 6 distinct templates, no prebuilt coverage, and 40 labeled samples per template (exceeding the minimum 5), custom extraction models trained per template and composed under a single endpoint is the correct approach. The prebuilt invoice model (B) is for invoice-specific fields — it cannot be configured for arbitrary field names without training. Content Understanding (C) is powerful for unstructured content but less precise for fixed-field extraction across known templates. GPT-4o (D) is non-deterministic and expensive at logistics scale."
   },
   {
     "tag": "s",
@@ -253,7 +253,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — In the function tool implementation.\n\nAuthentication to external APIs is always handled inside the function tool's Python implementation — not by the model, the agent config, or the client application. The function acquires a token using client credentials flow (e.g. via MSAL or DefaultAzureCredential with the right scope), attaches it as a Bearer token to the API request, and returns structured results to the agent. Putting the token in the system prompt (A) exposes it in traces and responses. Foundry agent connections (C) are for Azure service connections, not arbitrary OAuth flows. Passing the token in user messages (D) exposes credentials in conversation history."
+    "expl": "Correct answer: C — In the function tool implementation.\n\nAuthentication to external APIs is always handled inside the function tool's Python implementation — not by the model, the agent config, or the client application. The function acquires a token using client credentials flow (e.g. via MSAL or DefaultAzureCredential with the right scope), attaches it as a Bearer token to the API request, and returns structured results to the agent. Putting the token in the system prompt (A) exposes it in traces and responses. Foundry agent connections (B) are for Azure service connections, not arbitrary OAuth flows. Passing the token in user messages (D) exposes credentials in conversation history."
   },
   {
     "tag": "s",
@@ -297,7 +297,7 @@
       0,
       1
     ],
-    "expl": "Correct answers: A and C.\n\nPrivate Endpoints (A) create private IP addresses for Azure AI services inside the company's network, disabling public access. VNet integration (C) routes application traffic to AI services through private network paths. Together they ensure end-to-end private connectivity. API Management (B) proxies HTTP traffic but does not inherently keep it private — it would also need private endpoint configuration. Encryption at rest (D) protects stored data — it does not control network routing or prevent data from traversing the public internet."
+    "expl": "Correct answers: A and B\n\nPrivate Endpoints (A) create private IP addresses for Azure AI services inside the company's network, disabling public access. VNet integration (B) routes application traffic to AI services through private network paths. Together they ensure end-to-end private connectivity. API Management (D) proxies HTTP traffic but does not inherently keep it private — it would also need private endpoint configuration. Encryption at rest (C) protects stored data — it does not control network routing or prevent data from traversing the public internet."
   },
   {
     "tag": "f",
@@ -314,7 +314,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — vector_search output not wired to llm_response input.\n\nIn Prompt Flow's DAG (directed acyclic graph), node outputs must be explicitly connected to downstream node inputs. If vector_search completes successfully but llm_response receives empty context, the most likely cause is that the connection between nodes is missing or misconfigured — the context variable is not mapped from vector_search output to llm_response input. Zero-length vectors would cause vector_search to fail, not succeed. A different project deployment would cause an authentication error. System prompt grounding is a separate concern — the node still receives whatever is wired to its context input."
+    "expl": "Correct answer: D — vector_search output not wired to llm_response input.\n\nIn Prompt Flow's DAG (directed acyclic graph), node outputs must be explicitly connected to downstream node inputs. If vector_search completes successfully but llm_response receives empty context, the most likely cause is that the connection between nodes is missing or misconfigured — the context variable is not mapped from vector_search output to llm_response input. Zero-length vectors would cause vector_search to fail, not succeed. A different project deployment would cause an authentication error. System prompt grounding is a separate concern — the node still receives whatever is wired to its context input."
   },
   {
     "tag": "r",
@@ -331,7 +331,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — Groundedness score.\n\nGroundedness directly measures whether the agent's claims are supported by the retrieved context (policy documents). Low groundedness = the agent is making claims not present in the retrieved policies = incorrect information risk. Coherence measures logical flow — not factual accuracy. Fluency measures grammar — not content correctness. Relevance measures whether the answer addresses the question — a response can be relevant but still factually wrong if it hallucates."
+    "expl": "Correct answer: C — Groundedness score.\n\nGroundedness directly measures whether the agent's claims are supported by the retrieved context (policy documents). Low groundedness = the agent is making claims not present in the retrieved policies = incorrect information risk. Coherence measures logical flow — not factual accuracy. Fluency measures grammar — not content correctness. Relevance measures whether the answer addresses the question — a response can be relevant but still factually wrong if it hallucates."
   },
   {
     "tag": "f",
@@ -367,7 +367,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — Azure AI Foundry Tracing.\n\nFoundry Tracing captures full OpenTelemetry traces for every agent run — each span includes start time, end time, and duration for every step: LLM calls, tool invocations, retrieval operations, and the overall run. This makes it the correct tool for diagnosing per-step latency. Azure Monitor Metrics (A) measures aggregate resource-level metrics — not per-step agent execution timing. Application Insights (C) requires manual timestamp instrumentation. The Evaluation SDK (D) measures quality metrics — it does not evaluate latency."
+    "expl": "Correct answer: D — Azure AI Foundry Tracing.\n\nFoundry Tracing captures full OpenTelemetry traces for every agent run — each span includes start time, end time, and duration for every step: LLM calls, tool invocations, retrieval operations, and the overall run. This makes it the correct tool for diagnosing per-step latency. Azure Monitor Metrics (A) measures aggregate resource-level metrics — not per-step agent execution timing. Application Insights (C) requires manual timestamp instrumentation. The Evaluation SDK (B) measures quality metrics — it does not evaluate latency."
   },
   {
     "tag": "f",
@@ -413,7 +413,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — Model parameter does not match the deployment name.\n\nIn Azure AI Foundry, models are accessed by their deployment name — not the base model name. Passing model='gpt-4o' when the deployment is named 'my-gpt4o-prod' results in a 404 because no deployment with that exact name exists. The fix is to use the exact deployment name. The azure-ai-inference SDK supports GPT-4o and works with DefaultAzureCredential — both A and D are incorrect. API version differences do not typically cause 404 errors."
+    "expl": "Correct answer: C — Model parameter does not match the deployment name.\n\nIn Azure AI Foundry, models are accessed by their deployment name — not the base model name. Passing model='gpt-4o' when the deployment is named 'my-gpt4o-prod' results in a 404 because no deployment with that exact name exists. The fix is to use the exact deployment name. The azure-ai-inference SDK supports GPT-4o and works with DefaultAzureCredential — both A and D are incorrect. API version differences do not typically cause 404 errors."
   },
   {
     "tag": "f",
@@ -449,7 +449,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: C — People must be informed they are interacting with AI and understand how decisions are made.\n\nTransparency in Microsoft's Responsible AI framework means: disclosing that a system is AI-powered, making the system's purpose and capabilities understandable, and enabling meaningful explanation of decisions. Fairness (A) is a separate principle. Reliability and Safety (B) is a separate principle. Privacy and Security (D) is a separate principle. Each of the six principles is distinct and commonly tested as a matching exercise on AI-103."
+    "expl": "Correct answer: B — People must be informed they are interacting with AI and understand how decisions are made.\n\nTransparency in Microsoft's Responsible AI framework means: disclosing that a system is AI-powered, making the system's purpose and capabilities understandable, and enabling meaningful explanation of decisions. Fairness (A) is a separate principle. Reliability and Safety (C) is a separate principle. Privacy and Security (D) is a separate principle. Each of the six principles is distinct and commonly tested as a matching exercise on AI-103."
   },
   {
     "tag": "f",
@@ -466,7 +466,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — Add a vector field and run an embedding skill.\n\nAzure AI Search supports adding new fields to an existing index schema without deleting it. Adding a vector field (Collection(Edm.Single) with dimensions and vectorSearchProfile), then running an indexer with an embedding skill (e.g. AzureOpenAIEmbeddingSkill) populates the new field for existing documents. Full rebuild (A) is unnecessary. A separate index (C) adds complexity without leveraging the existing index's keyword search for hybrid. Semantic ranker (D) re-ranks keyword results using language models — it does not perform vector similarity search and does not require a vector field."
+    "expl": "Correct answer: D — Add a vector field and run an embedding skill.\n\nAzure AI Search supports adding new fields to an existing index schema without deleting it. Adding a vector field (Collection(Edm.Single) with dimensions and vectorSearchProfile), then running an indexer with an embedding skill (e.g. AzureOpenAIEmbeddingSkill) populates the new field for existing documents. Full rebuild (A) is unnecessary. A separate index (C) adds complexity without leveraging the existing index's keyword search for hybrid. Semantic ranker (B) re-ranks keyword results using language models — it does not perform vector similarity search and does not require a vector field."
   },
   {
     "tag": "f",
@@ -484,7 +484,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: A and C.\n\nThe evaluate() function accepts multiple evaluators in a single call via the evaluators dict — e.g. evaluators={'groundedness': g_eval, 'relevance': r_eval, 'coherence': c_eval}. All evaluators run against the same dataset in one call (A). The JSONL dataset must include query, response, and context fields (C) — groundedness requires context to measure whether the response is supported by retrieved content (D is false — groundedness specifically needs context, not just the response)."
+    "expl": "Correct answers: B and C\n\nThe evaluate() function accepts multiple evaluators in a single call via the evaluators dict — e.g. evaluators={'groundedness': g_eval, 'relevance': r_eval, 'coherence': c_eval}. All evaluators run against the same dataset in one call (B). The JSONL dataset must include query, response, and context fields (C) — groundedness requires context to measure whether the response is supported by retrieved content (D is false — groundedness specifically needs context, not just the response)."
   },
   {
     "tag": "f",
@@ -581,7 +581,7 @@
       2,
       3
     ],
-    "expl": "Correct answers: A and C.\n\nThe issue is a Fairness violation — differential error rates across demographic/community groups. The correct actions are: (1) measure the disparity systematically using a stratified evaluation dataset and the HateUnfairnessEvaluator (A), and (2) audit and address representation imbalance in the data (C) — skewed training or evaluation data is a common root cause of differential performance. Raising the threshold (B) reduces overall volume but does not address the relative disparity — the 3x ratio may persist. Separate models per community (D) avoids the problem rather than solving it and creates maintenance overhead."
+    "expl": "Correct answers: C and D\n\nThe issue is a Fairness violation — differential error rates across demographic/community groups. The correct actions are: (1) measure the disparity systematically using a stratified evaluation dataset and the HateUnfairnessEvaluator (C), and (2) audit and address representation imbalance in the data (D) — skewed training or evaluation data is a common root cause of differential performance. Raising the threshold (A) reduces overall volume but does not address the relative disparity — the 3x ratio may persist. Separate models per community (B) avoids the problem rather than solving it and creates maintenance overhead."
   },
   {
     "tag": "f",
@@ -617,7 +617,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — The agentic loop.\n\nThe agentic loop is the core pattern enabling iterative RAG. On each turn the model evaluates its current context and decides: call the retrieval tool again with a refined query, or generate a final answer. This self-directed iteration is what distinguishes agentic RAG from single-turn RAG. Parallel tool calling runs concurrent searches — not sequential self-evaluating iterations. Semantic ranker refines within a single search call. Chain-of-thought improves reasoning quality but does not drive tool invocation decisions across turns."
+    "expl": "Correct answer: C — The agentic loop.\n\nThe agentic loop is the core pattern enabling iterative RAG. On each turn the model evaluates its current context and decides: call the retrieval tool again with a refined query, or generate a final answer. This self-directed iteration is what distinguishes agentic RAG from single-turn RAG. Parallel tool calling runs concurrent searches — not sequential self-evaluating iterations. Semantic ranker refines within a single search call. Chain-of-thought improves reasoning quality but does not drive tool invocation decisions across turns."
   },
   {
     "tag": "f",
@@ -651,7 +651,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: C — Optional field with null default.\n\nContent Understanding schemas support optional fields — when a field is defined as optional, the model only populates it when the relevant evidence exists in the input. For damage_description, defining it as optional means the model naturally populates it only when the image shows damage signs. Conditional schema logic with if-then conditions (B) is not a supported Content Understanding schema feature. Required field constraints (A) cannot depend on another field's value. A Prompt Flow post-processing step (D) achieves the same result but adds unnecessary orchestration complexity."
+    "expl": "Correct answer: B — Optional field with null default.\n\nContent Understanding schemas support optional fields — when a field is defined as optional, the model only populates it when the relevant evidence exists in the input. For damage_description, defining it as optional means the model naturally populates it only when the image shows damage signs. Conditional schema logic with if-then conditions (B) is not a supported Content Understanding schema feature. Required field constraints (A) cannot depend on another field's value. A Prompt Flow post-processing step (D) achieves the same result but adds unnecessary orchestration complexity."
   },
   {
     "tag": "f",
@@ -668,7 +668,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: A — Foundry Tracing → Azure Monitor Log Analytics + KQL.\n\nFoundry Tracing exports OpenTelemetry traces to Azure Monitor Log Analytics. Each trace span represents a step (LLM call, tool call, retrieval) with timing and status. KQL queries can aggregate tool call frequency, failure rates, and latency by tool type across all production runs. Application Insights (B) requires manual custom event instrumentation for each tool. The Evaluation SDK (C) measures quality metrics, not operational tool usage statistics. Cost Management (D) provides billing data — not tool-level execution analytics."
+    "expl": "Correct answer: B — Foundry Tracing → Azure Monitor Log Analytics + KQL.\n\nFoundry Tracing exports OpenTelemetry traces to Azure Monitor Log Analytics. Each trace span represents a step (LLM call, tool call, retrieval) with timing and status. KQL queries can aggregate tool call frequency, failure rates, and latency by tool type across all production runs. Application Insights (A) requires manual custom event instrumentation for each tool. The Evaluation SDK (C) measures quality metrics, not operational tool usage statistics. Cost Management (D) provides billing data — not tool-level execution analytics."
   },
   {
     "tag": "f",
@@ -728,7 +728,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: C — High risk.\n\nThe EU AI Act Annex III explicitly lists AI systems used in healthcare resource allocation and prioritisation as high-risk. High-risk obligations include conformity assessment before deployment, human oversight capability, logging and audit trails, and registration in the EU AI database. It is not minimal risk — healthcare prioritisation directly affects patient welfare. Limited risk applies to chatbots and deepfakes. It is not prohibited — unacceptable risk is reserved for social scoring, real-time public biometric surveillance, and manipulation systems."
+    "expl": "Correct answer: A — High risk.\n\nThe EU AI Act Annex III explicitly lists AI systems used in healthcare resource allocation and prioritisation as high-risk. High-risk obligations include conformity assessment before deployment, human oversight capability, logging and audit trails, and registration in the EU AI database. It is not minimal risk — healthcare prioritisation directly affects patient welfare. Limited risk applies to chatbots and deepfakes. It is not prohibited — unacceptable risk is reserved for social scoring, real-time public biometric surveillance, and manipulation systems."
   },
   {
     "tag": "f",
@@ -799,7 +799,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — https://{project-name}.services.ai.azure.com/models.\n\nThe azure-ai-inference SDK connects to Azure AI Foundry using the project-level inference endpoint in the format https://{project-name}.services.ai.azure.com/models. This single endpoint surfaces all model deployments in the project — both the GPT-4o and embedding deployments are accessible from the same client. The Azure OpenAI endpoint (A) is for the openai SDK pattern. The global Cognitive Services endpoint (C) is a legacy URL. The AzureML endpoint (D) is for custom model deployments on AML compute, not Foundry."
+    "expl": "Correct answer: D — https://{project-name}.services.ai.azure.com/models.\n\nThe azure-ai-inference SDK connects to Azure AI Foundry using the project-level inference endpoint in the format https://{project-name}.services.ai.azure.com/models. This single endpoint surfaces all model deployments in the project — both the GPT-4o and embedding deployments are accessible from the same client. The Azure OpenAI endpoint (A) is for the openai SDK pattern. The global Cognitive Services endpoint (C) is a legacy URL. The AzureML endpoint (B) is for custom model deployments on AML compute, not Foundry."
   },
   {
     "tag": "f",
@@ -835,7 +835,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: B — Foundry Playground.\n\nThe Foundry Playground is the interactive no-code tool for testing and comparing model/agent configurations. It supports creating multiple system prompt configurations and running the same queries against them for direct response comparison. The Evaluation SDK (A) requires writing Python code. Prompt Flow (C) is a code/visual DAG tool — not designed for quick interactive comparisons. The model catalog (D) compares models, not system prompt configurations on the same model."
+    "expl": "Correct answer: D — Foundry Playground.\n\nThe Foundry Playground is the interactive no-code tool for testing and comparing model/agent configurations. It supports creating multiple system prompt configurations and running the same queries against them for direct response comparison. The Evaluation SDK (A) requires writing Python code. Prompt Flow (C) is a code/visual DAG tool — not designed for quick interactive comparisons. The model catalog (B) compares models, not system prompt configurations on the same model."
   },
   {
     "tag": "r",
@@ -852,7 +852,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: B — Reliability and Safety.\n\nReliability is specifically about performing consistently and predictably under varied conditions. A system that gives different answers to the same question with minor phrasing changes is unreliable. Mitigations include: lowering temperature for more deterministic output, adding system prompt instructions for consistency, few-shot examples showing consistent response patterns, and robust testing across phrasing variations. Fairness (A) is about demographic group disparities. Transparency (C) is about explainability. Inclusiveness (D) is about accessibility for diverse user populations."
+    "expl": "Correct answer: A — Reliability and Safety.\n\nReliability is specifically about performing consistently and predictably under varied conditions. A system that gives different answers to the same question with minor phrasing changes is unreliable. Mitigations include: lowering temperature for more deterministic output, adding system prompt instructions for consistency, few-shot examples showing consistent response patterns, and robust testing across phrasing variations. Fairness (B) is about demographic group disparities. Transparency (C) is about explainability. Inclusiveness (D) is about accessibility for diverse user populations."
   },
   {
     "tag": "f",
@@ -869,7 +869,7 @@
     "answer": [
       3
     ],
-    "expl": "Correct answer: C — run.last_error.\n\nWhen an Azure AI Foundry agent run fails, the error details are available in run.last_error — a LastErrorDetails object containing a code and message field describing the failure reason. run.error_message, run.failure_reason, and run.status_details are not valid properties on the run object in the azure-ai-projects SDK."
+    "expl": "Correct answer: D — run.last_error.\n\nWhen an Azure AI Foundry agent run fails, the error details are available in run.last_error — a LastErrorDetails object containing a code and message field describing the failure reason. run.error_message, run.failure_reason, and run.status_details are not valid properties on the run object in the azure-ai-projects SDK."
   },
   {
     "tag": "f",
@@ -906,7 +906,7 @@
       1,
       2
     ],
-    "expl": "Correct answers: A and D.\n\nFor agentic RAG solutions, the two most AI-specific red-teaming scenarios are: (1) Prompt injection via retrieved documents (A) — malicious content embedded in indexed source documents (e.g. hidden instructions like 'ignore previous instructions and...') that the retrieval tool surfaces and the model acts on, and (2) context window stuffing (D) — submitting extremely long inputs to consume the context window, potentially crowding out retrieved context or causing unexpected model behaviour. SQL injection (B) applies only if the agent generates SQL queries from user input. XSS (C) is a web application vulnerability unrelated to LLM agent behaviour."
+    "expl": "Correct answers: B and C\n\nFor agentic RAG solutions, the two most AI-specific red-teaming scenarios are: (1) Prompt injection via retrieved documents (B) — malicious content embedded in indexed source documents (e.g. hidden instructions like 'ignore previous instructions and...') that the retrieval tool surfaces and the model acts on, and (2) context window stuffing (C) — submitting extremely long inputs to consume the context window, potentially crowding out retrieved context or causing unexpected model behaviour. SQL injection (A) applies only if the agent generates SQL queries from user input. XSS (D) is a web application vulnerability unrelated to LLM agent behaviour."
   },
   {
     "tag": "f",
@@ -923,7 +923,7 @@
     "answer": [
       1
     ],
-    "expl": "Correct answer: D — Azure AI Search SharePoint Online indexer.\n\nAzure AI Search has a native SharePoint Online data source connector that authenticates to Microsoft 365 using app registration credentials, crawls document libraries, and populates the search index. This is the most architecturally clean solution — the vector index stays in sync without custom tooling. A native Foundry SharePoint connector (A) does not currently exist as a built-in feature. Microsoft Graph as a function tool (B) works but adds per-query API calls for content that could be indexed once. Power Automate sync (C) adds an unnecessary ETL layer and introduces sync lag."
+    "expl": "Correct answer: B — Azure AI Search SharePoint Online indexer.\n\nAzure AI Search has a native SharePoint Online data source connector that authenticates to Microsoft 365 using app registration credentials, crawls document libraries, and populates the search index. This is the most architecturally clean solution — the vector index stays in sync without custom tooling. A native Foundry SharePoint connector (A) does not currently exist as a built-in feature. Microsoft Graph as a function tool (D) works but adds per-query API calls for content that could be indexed once. Power Automate sync (C) adds an unnecessary ETL layer and introduces sync lag."
   },
   {
     "tag": "f",
@@ -940,7 +940,7 @@
     "answer": [
       0
     ],
-    "expl": "Correct answer: B — Structured outputs with response_format schema + detailed system prompt.\n\nStructured outputs (response_format with a JSON schema) enforce that the model returns specific fields, and a detailed system prompt with explicit constraints (required fields, max word count) provides the generation guidance. This combination is the most reliable enforcement mechanism. Temperature 0 (A) reduces randomness but does not enforce structural requirements. Fine-tuning (C) is expensive, requires retraining when requirements change, and is not necessary for a formatting task that prompt engineering handles well. Post-processing truncation (D) is a brittle fallback that corrupts valid sentences and doesn't enforce field presence."
+    "expl": "Correct answer: A — Structured outputs with response_format schema + detailed system prompt.\n\nStructured outputs (response_format with a JSON schema) enforce that the model returns specific fields, and a detailed system prompt with explicit constraints (required fields, max word count) provides the generation guidance. This combination is the most reliable enforcement mechanism. Temperature 0 (B) reduces randomness but does not enforce structural requirements. Fine-tuning (C) is expensive, requires retraining when requirements change, and is not necessary for a formatting task that prompt engineering handles well. Post-processing truncation (D) is a brittle fallback that corrupts valid sentences and doesn't enforce field presence."
   },
   {
     "tag": "f",
@@ -993,7 +993,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: B — Application-layer summarisation step.\n\nConversation memory management with summarisation must be implemented in the application layer. When the thread exceeds a message threshold, the application calls the LLM to generate a concise summary of older messages, creates a new synthetic message with the summary, and either trims the thread or starts a new one with the summary as context. max_prompt_tokens (A) truncates older messages but does not summarise them — information is lost. Using AI Search as a message store (C) retrieves by recency but misses context from omitted messages. Larger context windows (D) delay the problem but do not solve it for very long conversations."
+    "expl": "Correct answer: C — Application-layer summarisation step.\n\nConversation memory management with summarisation must be implemented in the application layer. When the thread exceeds a message threshold, the application calls the LLM to generate a concise summary of older messages, creates a new synthetic message with the summary, and either trims the thread or starts a new one with the summary as context. max_prompt_tokens (A) truncates older messages but does not summarise them — information is lost. Using AI Search as a message store (B) retrieves by recency but misses context from omitted messages. Larger context windows (D) delay the problem but do not solve it for very long conversations."
   },
   {
     "tag": "f",
@@ -1077,7 +1077,7 @@
       1,
       3
     ],
-    "expl": "Correct answers: B and D — Private endpoints + VNet integration and private DNS resolution satisfy no-public-egress requirements. IP allowlists (B) still use public endpoints. Telemetry export (D) is supported; use private link/diagnostic settings where applicable."
+    "expl": "Correct answers: B and D — Private endpoints + VNet integration and private DNS resolution satisfy no-public-egress requirements. IP allowlists (A) still use public endpoints. Telemetry export (C) is supported; use private link/diagnostic settings where applicable."
   },
   {
     "tag": "r",
@@ -1133,7 +1133,7 @@
     "answer": [
       2
     ],
-    "expl": "Correct answer: C — Custom schema enforces fields and types, simplifying downstream processing. Free-form prompts (A) are inconsistent. Post-processing (C) adds variability. Higher sampling (D) reduces consistency."
+    "expl": "Correct answer: C — Custom schema enforces fields and types, simplifying downstream processing. Free-form prompts (A) are inconsistent. Post-processing (B) adds variability. Higher sampling (D) reduces consistency."
   },
   {
     "tag": "s",
@@ -1176,7 +1176,7 @@
       1,
       3
     ],
-    "expl": "Correct answers: B and D — Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (A) may increase cold-start latency. Batching unrelated user inputs (B) breaks isolation and traceability."
+    "expl": "Correct answers: B and D— Caching reusable steps and using efficient embedding models cut cost. Setting min_instances=0 (C) may increase cold-start latency. Batching unrelated user inputs (A) breaks isolation and traceability."
   },
   {
     "tag": "r",
@@ -1195,7 +1195,7 @@
       0,
       1
     ],
-    "expl": "Correct answers: A and B — Human-in-the-loop for clinical context and strict privacy controls. Disabling all logs (B) removes auditability. Autonomy to discharge (D) violates oversight."
+    "expl": "Correct answers: A and B — Human-in-the-loop for clinical context and strict privacy controls. Disabling all logs (C) removes auditability. Autonomy to discharge (D) violates oversight."
   },
   {
     "tag": "f",
@@ -1419,7 +1419,7 @@
       0,
       3
     ],
-    "expl": "Correct answers: A and D — Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
+    "expl": "Correct answers: A and D— Better chunking and explicit grounding/refusal instructions reduce unsupported claims."
   },
   {
     "tag": "f",
@@ -1559,7 +1559,7 @@
       0,
       2
     ],
-    "expl": "Correct answers: A and C — Parallelize independent calls and cache hot results. Disabling batching (B) hurts throughput. Semantic ranker (D) is complementary, not a replacement for vectors."
+    "expl": "Correct answers: A and C — Parallelize independent calls and cache hot results. Disabling batching (D) hurts throughput. Semantic ranker (B) is complementary, not a replacement for vectors."
   },
   {
     "tag": "f",
@@ -1718,7 +1718,7 @@
       2,
       3
     ],
-    "expl": "Correct answers: C and D — Playground is no-code; Prompt Flow can be configured visually, though it’s more effort. SDK (C) requires code; catalog compares models, not prompt variants (D)."
+    "expl": "Correct answers: C and D — Playground is no-code; Prompt Flow can be configured visually, though it’s more effort. SDK (B) requires code; catalog compares models, not prompt variants (A)."
   },
   {
     "tag": "f",
